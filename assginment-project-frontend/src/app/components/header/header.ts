@@ -18,7 +18,7 @@ export class Header {
   }
 
   openAddDevice(){
-
+    console.log('Add Device button clicked - Modal will open here.');
   }
 
 }

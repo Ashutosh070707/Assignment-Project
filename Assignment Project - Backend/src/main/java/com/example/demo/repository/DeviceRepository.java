@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.DTO.DeviceSummary;
+import com.example.demo.DTO.ShelfPair;
 import com.example.demo.entity.Device;
 import com.example.demo.entity.Shelf;
 import com.example.demo.entity.ShelfPosition;
@@ -74,9 +75,9 @@ public class DeviceRepository {
     public Optional<DeviceSummary> getDeviceDetails(String deviceName) {
         final String cypher = """
                 MATCH (d:Device {deviceName: $deviceName})
-                OPTIONAL MATCH (d)-[r:HAS]->(sp:ShelfPosition)
-                OPTIONAL MATCH (sp)-[p:ATTACHED]->(s:Shelf)
-                RETURN d as device, collect(sp) as shelfPositions, collect(s) as shelves
+                OPTIONAL MATCH (d)-[:HAS]->(sp:ShelfPosition)
+                OPTIONAL MATCH (sp)-[:ATTACHED]->(s:Shelf)
+                RETURN d as device, collect({shelfPosition: sp, shelf: s}) as shelfPairs;
                 """;
 
         try {
@@ -100,27 +101,43 @@ public class DeviceRepository {
 
             deviceSummary.setDevice(device);
 
-            List<ShelfPosition> shelfPositions = new ArrayList<>();
-            record.get("shelfPositions").asList(value -> value.asNode()).forEach(spNode -> {
-                ShelfPosition shelfPosition = new ShelfPosition();
-                shelfPosition.setId(spNode.get("id").asString());
-                shelfPosition.setDeviceId(spNode.get("deviceId").asString());
-                shelfPositions.add(shelfPosition);
+
+            List<ShelfPair> shelfPairs = new ArrayList<>();
+
+// Iterate over the list of maps returned as 'shelfPairs'
+            record.get("shelfPairs").asList(value -> value).forEach(pairValue -> {
+
+                org.neo4j.driver.Value spValue = pairValue.get("shelfPosition");
+                org.neo4j.driver.Value sValue = pairValue.get("shelf");
+
+                // 1. Check if the device has ANY shelf positions
+                if (!spValue.isNull()) {
+
+                    // Extract ShelfPosition
+                    org.neo4j.driver.types.Node spNode = spValue.asNode();
+                    ShelfPosition shelfPosition = new ShelfPosition();
+                    shelfPosition.setId(spNode.get("id").asString());
+                    shelfPosition.setDeviceId(spNode.get("deviceId").asString());
+
+                    // Extract Shelf (default to null)
+                    Shelf shelf = null;
+
+                    // 2. If a Shelf is attached, instantiate and populate it
+                    if (!sValue.isNull()) {
+                        org.neo4j.driver.types.Node sNode = sValue.asNode();
+                        shelf = new Shelf();
+                        shelf.setId(sNode.get("id").asString());
+                        shelf.setShelfName(sNode.get("shelfName").asString());
+                        shelf.setPartNumber(sNode.get("partNumber").asString());
+                    }
+
+                    // 3. Add the bundled pair to our list
+                    shelfPairs.add(new ShelfPair(shelfPosition, shelf));
+                }
             });
 
-            deviceSummary.setShelfPositions(shelfPositions);
-
-            List<Shelf> shelves = new ArrayList<>();
-
-            record.get("shelves").asList(Value::asNode).forEach(sNode -> {
-                Shelf shelf = new Shelf();
-                shelf.setId(sNode.get("id").asString());
-                shelf.setShelfName(sNode.get("shelfName").asString());
-                shelf.setPartNumber(sNode.get("partNumber").asString());
-                shelves.add(shelf);
-            });
-
-            deviceSummary.setShelves(shelves);
+// Set the unified list to your DTO
+            deviceSummary.setShelfPairs(shelfPairs);
 
             return Optional.of(deviceSummary);
         } catch (Exception e) {

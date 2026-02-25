@@ -1,0 +1,69 @@
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--text-main);
+}
+
+#dropdown-header {
+  padding: 15px 20px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--text-main);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+#dropdown-header:hover {
+  background-color: var(--sidebar-allDevice-selected);
+}
+
+.dropdown-header-selected{
+  background-color: var(--sidebar-allDevice-selected);
+}
+
+/* Arrow rotation animation */
+.arrow {
+  transition: transform 0.3s ease;
+}
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.device-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto; /* Adds a scrollbar exactly as noted in your Excalidraw */
+  flex: 1; /* Allows the list to take up the remaining sidebar height */
+}
+
+.device-item {
+  padding: 12px 20px 12px 40px; /* Indented slightly so it looks like a dropdown item */
+  cursor: pointer;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2); /* Faint separator line */
+  transition: all 0.2s ease;
+}
+
+.device-item:hover {
+  background-color: rgba(128, 128, 128, 0.15);
+}
+
+.no-device {
+  text-align: center;      /* Centers the text horizontally */
+  padding: 1rem;           /* Gives it some breathing room */
+  color: #6b7280;          /* Optional: Gives it a muted, grayish placeholder look */
+  font-style: italic;      /* Optional: Emphasizes that it's an empty state */
+}
+
+/* Styling for the currently clicked device */
+.device-item.selected {
+  background-color: rgba(128, 128, 128, 0.3);
+  font-weight: bold;
+  /* Adds a nice brand-colored stripe on the left to show it's active */
+  border-left: 4px solid var(--bg-brand); 
+  padding-left: 36px; /* Offset the 4px border so text doesn't shift */
+}

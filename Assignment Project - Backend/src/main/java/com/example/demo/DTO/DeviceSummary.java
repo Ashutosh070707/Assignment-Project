@@ -1,8 +1,7 @@
 package com.example.demo.DTO;
 
 import com.example.demo.entity.Device;
-import com.example.demo.entity.Shelf;
-import com.example.demo.entity.ShelfPosition;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +14,5 @@ import java.util.List;
 @AllArgsConstructor
 public class DeviceSummary {
     private Device device;
-    private List<ShelfPosition> shelfPositions = new ArrayList<>();
-    private List<Shelf> shelves = new ArrayList<>();
+    private List<ShelfPair> shelfPairs = new ArrayList<>();
 }

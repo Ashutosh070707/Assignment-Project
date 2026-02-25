@@ -1,0 +1,76 @@
+.dropdown-deviceinfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--header-border-bottom);
+  background-color: var(--bg-brand); 
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+
+
+
+
+/* What is this table wrapper class ? */
+
+
+
+/* 
+
+.shelf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.table-scroll-container {
+  max-height: 350px; 
+  overflow-y: auto;
+  border: 1px solid var(--text-main);
+  border-radius: 4px;
+}
+
+.shelf-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.shelf-table th, 
+.shelf-table td {
+  border: 1px solid var(--text-main);
+  padding: 10px;
+}
+
+.shelf-table th {
+  background-color: var(--bg-brand); 
+  color: var(--text-title);
+  position: sticky;
+  top: 0;
+  z-index: 1; 
+}
+
+
+.text-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.text-btn:hover {
+  text-decoration: underline;
+  font-weight: bold;
+} */

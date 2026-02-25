@@ -3,6 +3,20 @@
 
 
 :root {
+
+  /* =========================================
+     COMMON VARIABLES (Same for both themes)
+     ========================================= */
+  /* Header Action Buttons */
+  --header-btn-bg: rgb(232, 228, 228);
+  --header-btn-txt-color: black;
+  --header-btn-border-color: rgb(89, 84, 84);
+  --header-btn-hover-bg: rgb(255, 255, 255);
+
+  /* Sidebar */
+  --sidebar-allDevice-selected: rgba(211, 191, 191, 0.15);
+
+
   /* =========================================
      DARK MODE (DEFAULT)
      ========================================= */
@@ -15,7 +29,13 @@
   --header-btn-bg: rgb(232, 228, 228);
   --header-btn-txt-color: black;
   --header-btn-border-color: rgb(89, 84, 84);
-  --header-btn-hover-bg: rgb(195, 189, 189);
+  --header-btn-hover-bg: rgb(255, 255, 255);
+  --header-border-bottom: white;
+
+
+  /* Sidebar CSS variables */
+  --sidebar-border-right-color: white;
+  --sidebar-allDevice-selected: rgba(211, 191, 191, 0.15);
   
 }
 
@@ -28,11 +48,16 @@
   --text-main: black;        /* Sidebar text & general text */
   --text-title: white;       /* Project title text (Stays white) */
   
-  /* Button - Light Mode */
-  --btn-bg: lightgrey;
-  --btn-text: black;
-  --btn-hover-bg: #d3d3d3;   /* Slightly darker grey for hover effect */
-  --btn-hover-text: black;
+  /* Header Action Buttons */
+  --header-btn-bg: rgb(232, 228, 228);
+  --header-btn-txt-color: black;
+  --header-btn-border-color: rgb(89, 84, 84);
+  --header-btn-hover-bg: rgb(255, 255, 255);
+  --header-border-bottom: black;
+
+   /* Sidebar CSS variables */
+  --sidebar-border-right-color: black;
+  --sidebar-allDevice-selected: rgba(118, 109, 109, 0.15);
 }
 
 /* Apply the global background and text colors to the entire app */
