@@ -1,0 +1,14 @@
+<div class="header-container">
+  <div class="brand-title">Ashutosh Inventory</div>
+  <div class="header-actions">
+    <button class="action-btn" (click)="toggleTheme()">
+      @if(isDarkMode()){
+        Light
+      }
+      @else{
+        Dark
+      }
+    </button>
+    <button class="action-btn" (click)="openAddDevice()">Add Device</button>
+  </div>
+</div>

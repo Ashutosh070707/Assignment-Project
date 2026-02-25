@@ -1,0 +1,56 @@
+/* Import the font from Google Fonts (Must be at the absolute top) */
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap');
+
+
+:root {
+  /* =========================================
+     DARK MODE (DEFAULT)
+     ========================================= */
+  --bg-global: #121212;      /* All background should be dark */
+  --bg-brand: purple;        /* Header & Accordion backgrounds */
+  --text-main: white;        /* Sidebar text & general text */
+  --text-title: white;       /* Project title text */
+
+  /* Header Action Buttons */
+  --header-btn-bg: rgb(232, 228, 228);
+  --header-btn-txt-color: black;
+  --header-btn-border-color: rgb(89, 84, 84);
+  --header-btn-hover-bg: rgb(195, 189, 189);
+  
+}
+
+.light-theme {
+  /* =========================================
+     LIGHT MODE OVERRIDES
+     ========================================= */
+  --bg-global: white;        /* All background should be white */
+  --bg-brand: blue;          /* Header & Accordion backgrounds */
+  --text-main: black;        /* Sidebar text & general text */
+  --text-title: white;       /* Project title text (Stays white) */
+  
+  /* Button - Light Mode */
+  --btn-bg: lightgrey;
+  --btn-text: black;
+  --btn-hover-bg: #d3d3d3;   /* Slightly darker grey for hover effect */
+  --btn-hover-text: black;
+}
+
+/* Apply the global background and text colors to the entire app */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Comic Neue', 'Chalkboard SE', 'Comic Sans MS', cursive;
+  background-color: var(--bg-global);
+  color: var(--text-main);
+  
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+}
+
+input, button, textarea, select {
+  font-family: inherit;
+}
