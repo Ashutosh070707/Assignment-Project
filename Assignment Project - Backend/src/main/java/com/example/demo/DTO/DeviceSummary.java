@@ -16,3 +16,4 @@ public class DeviceSummary {
     private Device device;
     private List<ShelfPair> shelfPairs = new ArrayList<>();
 }
+ 

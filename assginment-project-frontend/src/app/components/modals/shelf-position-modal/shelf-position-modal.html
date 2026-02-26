@@ -1,0 +1,30 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h3>Add Shelf Position</h3>
+      <button class="close-btn" (click)="closeModal()">&#10005;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Shelf Position ID</label>
+        <input type="text" class="form-input" placeholder="e.g., sp-05">
+      </div>
+      <div class="form-group">
+        <label>Assign to Shelf (Optional)</label>
+        <select class="form-input">
+          <option value="">-- Leave Empty --</option>
+          <option value="sh-01">Main-Processing-Shelf</option>
+          <option value="sh-03">Power-Distribution-Shelf</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn btn-primary">Add Position</button>
+    </div>
+
+  </div>
+</div>

@@ -36,6 +36,12 @@
   /* Sidebar CSS variables */
   --sidebar-border-right-color: white;
   --sidebar-allDevice-selected: rgba(211, 191, 191, 0.15);
+
+  /* DeviceSummary */
+  --dropdown-default-bg-color: purple;
+  --dropdown-default-color: white;
+  --dropDown-hover-bg-color: rgb(233, 227, 227);
+  --drowpDown-hover-text-color: black;
   
 }
 
@@ -58,6 +64,12 @@
    /* Sidebar CSS variables */
   --sidebar-border-right-color: black;
   --sidebar-allDevice-selected: rgba(118, 109, 109, 0.15);
+
+  /* DeviceSummary */
+  --dropdown-default-bg-color: rgb(168, 168, 168);
+  --dropdown-default-color: black;
+  --dropDown-hover-bg-color: rgb(115, 141, 202);
+  --drowpDown-hover-text-color: black;
 }
 
 /* Apply the global background and text colors to the entire app */
@@ -79,3 +91,116 @@ body, html {
 input, button, textarea, select {
   font-family: inherit;
 }
+
+
+/* --- Overlay & Container --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.modal-container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Header --- */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h3 { margin: 0; font-size: 1.1rem; color: #0f172a; }
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: #ef4444; }
+
+/* --- Body & Forms --- */
+.modal-body { padding: 20px; }
+
+.delete-warning {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* --- Footer & Buttons --- */
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: #f8fafc;
+  border-radius: 0 0 8px 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.btn-cancel { background-color: #ffffff; color: #475569; border: 1px solid #cbd5e1; }
+.btn-cancel:hover { background-color: #f1f5f9; }
+
+.btn-primary { background-color: #3b82f6; color: white; }
+.btn-primary:hover { background-color: #2563eb; }
+
+.btn-danger { background-color: #ef4444; color: white; }
+.btn-danger:hover { background-color: #dc2626; }

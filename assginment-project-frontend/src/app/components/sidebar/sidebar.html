@@ -1,18 +1,18 @@
 <div class="sidebar-container">
-  <div id="dropdown-header" (click)="toggleDropdown()">
+  <div id="dropdown-header" [class.allDeviceSelected]="isDropdownOpen()" (click)="toggleDropdown()">
     <span>All Devices</span>
     <span class="arrow" [class.open]="isDropdownOpen()">&#9662;</span>
   </div>
 
   @if (isDropdownOpen()) {
     <ul class="device-list">
-      @for (device of devices(); track device.id) {
+      @for (device of deviceService.devices(); track device.id) {
         <li
           class="device-item"
           [class.selected]="selectedDeviceId() === device.id"
           (click)="selectDevice(device.id)"
         >
-          {{ device.name }}
+          {{ device.deviceName }}
         </li>
       } @empty {
         <li class="no-device">No Device</li>

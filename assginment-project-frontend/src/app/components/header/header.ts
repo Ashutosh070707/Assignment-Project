@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { ModalService } from '../../services/modal';
 
 @Component({
   selector: 'app-header',
@@ -7,6 +8,8 @@ import { Component, signal } from '@angular/core';
   styleUrl: './header.css',
 })
 export class Header {
+  constructor(public modalService: ModalService) {}
+
   isDarkMode = signal(true);
   toggleTheme(){
     if (this.isDarkMode()) {
@@ -16,9 +19,4 @@ export class Header {
     }
     this.isDarkMode.set(!this.isDarkMode());
   }
-
-  openAddDevice(){
-    console.log('Add Device button clicked - Modal will open here.');
-  }
-
 }

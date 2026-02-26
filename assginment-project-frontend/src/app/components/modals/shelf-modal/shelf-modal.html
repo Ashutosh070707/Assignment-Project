@@ -1,0 +1,26 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h3>Add New Shelf</h3>
+      <button class="close-btn" (click)="closeModal()">&#10005;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Shelf Name</label>
+        <input type="text" class="form-input" placeholder="e.g., Processing Shelf">
+      </div>
+      <div class="form-group">
+        <label>Part Number</label>
+        <input type="text" class="form-input" placeholder="e.g., SH-999">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn btn-primary">Add Shelf</button>
+    </div>
+
+  </div>
+</div>

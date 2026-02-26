@@ -1,0 +1,40 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h3>
+        @if (mode === 'add') { Add New Device } 
+        @else { Update Device }
+      </h3>
+      <button class="close-btn" (click)="closeModal()">&#10005;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Device Name</label>
+        <input type="text" class="form-input" placeholder="e.g., Main Router">
+      </div>
+      <div class="form-group">
+        <label>Device Type</label>
+        <input type="text" class="form-input" placeholder="e.g., Networking">
+      </div>
+      <div class="form-group">
+        <label>Part Number</label>
+        <input type="text" class="form-input" placeholder="e.g., NTK-123">
+      </div>
+      <div class="form-group">
+        <label>Building Name</label>
+        <input type="text" class="form-input" placeholder="e.g., Block A">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn btn-primary">
+        @if (mode === 'add') { Add Device } 
+        @else { Save Changes }
+      </button>
+    </div>
+
+  </div>
+</div>

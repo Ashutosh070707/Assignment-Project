@@ -4,7 +4,7 @@
   height: 100%;
   color: var(--text-main);
 }
-
+ 
 #dropdown-header {
   padding: 15px 20px;
   font-weight: bold;
@@ -21,7 +21,7 @@
   background-color: var(--sidebar-allDevice-selected);
 }
 
-.dropdown-header-selected{
+#dropdown-header.allDeviceSelected{
   background-color: var(--sidebar-allDevice-selected);
 }
 

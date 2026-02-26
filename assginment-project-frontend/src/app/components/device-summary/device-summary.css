@@ -1,76 +1,331 @@
-.dropdown-deviceinfo {
+/* =========================================
+   1. DROPDOWN HEADERS (Grouped for DRY code)
+   ========================================= */
+.dropdown-deviceinfo,
+.dropdown-shelfPositions,
+.dropdown-shelves,
+.dropdown-setting {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--header-border-bottom);
-  background-color: var(--bg-brand); 
+  padding: 12px 16px;
+  background-color: var(--dropdown-default-bg-color);
+  border: 1px solid var(--header-border-bottom);
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--dropdown-default-color);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* Hover States */
+.dropdown-deviceinfo:hover,
+.dropdown-shelfPositions:hover,
+.dropdown-shelves:hover,
+.dropdown-setting:hover {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
+}
+
+/* Selected/Active States */
+.dropdown-deviceinfo.deviceInfoSelected,
+.dropdown-shelfPositions.shelfPositionsSelected,
+.dropdown-shelves.shelvesSelected,
+.dropdown-setting-settingSelected {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
+}
+
+.shelfPosition-header{
+  display: flex;
+  color: var(--text-main);
+  padding: 12px 16px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+/* Arrow Animation */
 .arrow {
   transition: transform 0.3s ease;
+  font-size: 1.2rem;
+  line-height: 1;
 }
+
 .arrow.open {
   transform: rotate(180deg);
 }
 
+/* =========================================
+   2. TABLE CONTAINERS
+   ========================================= */
+.table-wrapper {
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  margin-bottom: 8px;
+}
+
+.table-scroll-container {
+  overflow-x: auto;
+}
+
+/* =========================================
+   3. GLOBAL TABLE STYLING
+   ========================================= */
+.device-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* CRITICAL: Allows precise column widths and cell scrolling */
+  font-size: 0.95rem;
+}
+
+/* --- Centering & Cell Scrolling --- */
+.device-info-table th, 
+.device-info-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: center; /* Centers all text in headers and rows */
+  white-space: nowrap; /* Prevents text wrapping */
+  overflow-x: auto; /* Adds horizontal scroll inside the individual cell */
+  max-width: 100px; /* Triggers the overflow scrollbar */
+}
+
+/* Custom, thin scrollbar for individual cells so it doesn't look ugly */
+.device-info-table th::-webkit-scrollbar,
+.device-info-table td::-webkit-scrollbar {
+  height: 5px;
+}
+.device-info-table th::-webkit-scrollbar-thumb,
+.device-info-table td::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Remove bottom border from the very last row */
+.device-info-table tr:last-child th,
+.device-info-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Headers General Styling */
+.device-info-table thead th,
+.device-info-table tbody th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+}
+
+.device-info-table td {
+  color: #0f172a;
+}
+
+/* Row Hover Effect */
+.device-info-table tbody tr:hover td,
+.device-info-table tbody tr:hover th {
+  background-color: #f1f5f9;
+}
+
+/* =========================================
+   4. SPECIFIC COLUMN WIDTHS
+   ========================================= */
+
+/* --- Horizontal Tables (ShelfPositions & Shelves) --- */
+/* By setting the width on the thead headers, the whole column follows */
+.device-info-table thead th:nth-child(1) { width: 60px; }  /* S.No - Smaller width */
+.device-info-table thead th:nth-child(2) { width: 140px; } /* IDs */
+.device-info-table thead th:nth-child(3) { width: 220px; } /* Names / Shelf */
+.device-info-table thead th:nth-child(4) { width: 150px; } /* Action / Part No */
+.device-info-table thead th:nth-child(5) { width: 150px; } /* Action */
+
+/* --- Vertical Table (Device Info) --- */
+/* Target the left-side labels specifically */
+.device-info-table tbody th {
+  width: 35%; 
+}
+
+/* =========================================
+   5. BUTTONS (Optional styling for Add/Delete)
+   ========================================= */
+/* .text-btn {
+  background: none;
+  border: 1px solid #cbd5e1;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s ease;
+} */
+
+.text-btn-delete {
+  background: none;
+  border: 1px solid #cbd5e1;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: rgb(173, 42, 42);
+  color: white;
+  transition: all 0.2s ease;
+}
+.text-btn-delete:hover {
+  background-color: rgb(193, 18, 18);
+}
+
+.text-btn-add {
+  background: none;
+  border: 1px solid #cbd5e1;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: rgb(37, 123, 37);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.text-btn-add:hover {
+  background-color: rgb(11, 140, 11);
+}
 
 
-
-
-/* What is this table wrapper class ? */
 
 
 
 /* 
-
-.shelf-header {
+.dropdown-deviceinfo {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  font-weight: bold;
+  padding: 12px 16px;
+  background-color: var(--dropdown-default-bg-color);
+  border: 1px solid var(--header-border-bottom);
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--dropdown-default-color);
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-deviceinfo:hover {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
+}
+.dropdown-deviceinfo.deviceInfoSelected {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+.table-wrapper {
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02); 
+  margin-bottom: 16px;
 }
 
 .table-scroll-container {
-  max-height: 350px; 
-  overflow-y: auto;
-  border: 1px solid var(--text-main);
-  border-radius: 4px;
+  overflow-x: auto; 
 }
 
-.shelf-table {
+.device-info-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: center;
+  text-align: left;
+  font-size: 0.95rem;
 }
 
-.shelf-table th, 
-.shelf-table td {
-  border: 1px solid var(--text-main);
-  padding: 10px;
-}
-
-.shelf-table th {
-  background-color: var(--bg-brand); 
-  color: var(--text-title);
-  position: sticky;
-  top: 0;
-  z-index: 1; 
+.device-info-table th, 
+.device-info-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 
-.text-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 0.9rem;
+.device-info-table tr:last-child th,
+.device-info-table tr:last-child td {
+  border-bottom: none;
+}
+
+
+.device-info-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  width: 35%; 
+  white-space: nowrap; 
+}
+
+
+.device-info-table td {
+  color: #0f172a;
+}
+
+
+.device-info-table tbody tr:hover td,
+.device-info-table tbody tr:hover th {
+  background-color: #f1f5f9; 
+}
+
+.dropdown-shelfPositions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--dropdown-default-bg-color);
+  border: 1px solid var(--header-border-bottom);
   cursor: pointer;
-  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--dropdown-default-color);
+  transition: background-color 0.2s ease;
 }
 
-.text-btn:hover {
-  text-decoration: underline;
-  font-weight: bold;
+.dropdown-shelfPositions:hover {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
+}
+.dropdown-shelfPositions.shelfPositionsSelected {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
+}
+
+
+.dropdown-shelves {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--dropdown-default-bg-color);
+  border: 1px solid var(--header-border-bottom);
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--dropdown-default-color);
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-shelves:hover {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
+}
+.dropdown-shelves.shelvesSelected {
+  background-color: var(--dropDown-hover-bg-color);
+  color: var(--drowpDown-hover-text-color);
 } */

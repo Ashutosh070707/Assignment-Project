@@ -8,7 +8,6 @@ import com.example.demo.entity.ShelfPosition;
 import com.example.demo.enums.BuildingName;
 import com.example.demo.enums.DeviceType;
 import org.neo4j.driver.Driver;
-import org.neo4j.driver.Value;
 import org.neo4j.driver.types.Node;
 import org.springframework.stereotype.Repository;
 

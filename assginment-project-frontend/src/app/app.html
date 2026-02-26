@@ -6,4 +6,40 @@
   <div class="device-summary-content">
     <app-device-summary></app-device-summary>
   </div>
+
+  @if (
+    modalService.activeModal() === 'add-device' || modalService.activeModal() === 'update-device'
+  ) {
+    <app-device-modal
+      [mode]="modalService.activeModal() === 'add-device' ? 'add' : 'update'"
+      (close)="modalService.closeModal()"
+    >
+    </app-device-modal>
+  }
+
+  @if (
+    modalService.activeModal() === 'delete-device' ||
+    modalService.activeModal() === 'delete-shelf' ||
+    modalService.activeModal() === 'delete-shelf-position'
+  ) {
+    <app-delete-modal
+      [itemType]="
+        modalService.activeModal() === 'delete-device'
+          ? 'Device'
+          : modalService.activeModal() === 'delete-shelf'
+            ? 'Shelf'
+            : 'Shelf Position'
+      "
+      (close)="modalService.closeModal()"
+    >
+    </app-delete-modal>
+  }
+
+  @if (modalService.activeModal() === 'add-shelf') {
+    <app-shelf-modal (close)="modalService.closeModal()"></app-shelf-modal>
+  }
+
+  @if (modalService.activeModal() === 'add-shelf-position') {
+    <app-shelf-position-modal (close)="modalService.closeModal()"></app-shelf-position-modal>
+  }
 </div>

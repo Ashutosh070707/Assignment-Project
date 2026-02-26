@@ -1,31 +1,6 @@
 import { Component, signal } from '@angular/core';
-
-export interface Device {
-  id: string;
-  deviceId: string;
-  deviceName: string;
-  partNumber: string;
-  deviceType: string;
-  buildingName: string;
-  noOfShelfPositions: number;
-}
-
-export interface ShelfPosition {
-  id: string;
-  deviceId: string;
-}
-
-export interface Shelf {
-  id: string;
-  shelfName: string;
-  partNumber: string;
-}
-
-export interface deviceSummary {
-  device: Device;
-  shelfPositions: ShelfPosition[];
-  shelves: Shelf[];
-}
+import { ModalService } from '../../services/modal';
+import { GlobalDeviceSummary } from '../../models/device-summary.model';
 
 @Component({
   selector: 'app-device-summary',
@@ -34,66 +9,92 @@ export interface deviceSummary {
   styleUrl: './device-summary.css',
 })
 export class DeviceSummary {
+  constructor(public modalService: ModalService) {}
+
   isDeviceInfoOpen = signal(true);
-  isShelfPositionsOpen = signal(false); // Let's default to true right now so you can see it!
+  isShelfPositionsOpen = signal(false);
   isShelvesOpen = signal(false);
   isSettingOpen = signal(false);
 
-  deviceSummary = signal({
+  deviceSummary = signal<GlobalDeviceSummary>({
     device: {
-      id: 'd-8f7b2c99',
-      deviceId: 'OPT-SW-001',
-      deviceName: 'Optical-Aggregator-East',
-      partNumber: 'CN-6500-CHAS',
-      deviceType: 'Optical Switch',
-      buildingName: 'Main-DC-Gurugram',
-      noOfShelfPositions: 3,
+      id: 'd-998877',
+      deviceName: 'Core-Aggregator-Noida',
+      partNumber: 'NTK-503-AB',
+      deviceType: 'Optical Transport Node',
+      buildingName: 'Noida-DC-01',
+      noOfShelfPositions: 4,
     },
-
-    shelfPositions: [
+    shelfPairs: [
       {
-        id: 'sp-01',
-        deviceId: 'OPT-SW-001',
+        shelfPosition: {
+          id: 'sp-01',
+          deviceId: 'OPT-NODE-A',
+        },
+        shelf: {
+          id: 'sh-01',
+          shelfName: 'Main-Processing-Shelf',
+          partNumber: 'NTK-100-BB',
+        },
       },
       {
-        id: 'sp-02',
-        deviceId: 'OPT-SW-001',
+        shelfPosition: {
+          id: 'sp-02',
+          deviceId: 'OPT-NODE-A',
+        },
+        shelf: null,
       },
       {
-        id: 'sp-03',
-        deviceId: 'OPT-SW-001',
-      },
-    ],
-
-    shelves: [
-      {
-        id: 'sh-01',
-        shelfName: 'Control-Processor-Shelf',
-        partNumber: 'SH-CP-100',
-      },
-      {
-        id: 'sh-02',
-        shelfName: 'Line-Card-Shelf-A',
-        partNumber: 'SH-LC-200',
+        shelfPosition: {
+          id: 'sp-03',
+          deviceId: 'OPT-NODE-A',
+        },
+        shelf: {
+          id: 'sh-03',
+          shelfName: 'Power-Distribution-Shelf',
+          partNumber: 'NTK-PWR-AC',
+        },
       },
       {
-        id: 'sh-03',
-        shelfName: 'Power-Distribution-Shelf',
-        partNumber: 'SH-PWR-50',
+        shelfPosition: {
+          id: 'sp-04',
+          deviceId: 'OPT-NODE-A',
+        },
+        shelf: null,
       },
     ],
   });
 
   toggleDeviceInfo() {
-    this.isDeviceInfoOpen.set(!this.isDeviceInfoOpen());
+    this.isDeviceInfoOpen.update((v) => !v);
+    if (this.isDeviceInfoOpen()) {
+      this.isShelfPositionsOpen.set(false);
+      this.isShelvesOpen.set(false);
+      this.isSettingOpen.set(false);
+    }
   }
   toggleShelfPositions() {
-    this.isShelfPositionsOpen.set(!this.isShelfPositionsOpen());
+    this.isShelfPositionsOpen.update((v) => !v);
+    if (this.isShelfPositionsOpen()) {
+      this.isDeviceInfoOpen.set(false);
+      this.isShelvesOpen.set(false);
+      this.isSettingOpen.set(false);
+    }
   }
   toggleShelves() {
-    this.isShelvesOpen.set(!this.isShelvesOpen());
+    this.isShelvesOpen.update((v) => !v);
+    if (this.isShelvesOpen()) {
+      this.isDeviceInfoOpen.set(false);
+      this.isShelfPositionsOpen.set(false);
+      this.isSettingOpen.set(false);
+    }
   }
-  toggleSettings() {
-    this.isSettingOpen.set(!this.isSettingOpen);
+  toggleSetting() {
+    this.isSettingOpen.update((v) => !v);
+    if (this.isSettingOpen()) {
+      this.isDeviceInfoOpen.set(false);
+      this.isShelfPositionsOpen.set(false);
+      this.isShelvesOpen.set(false);
+    }
   }
 }
