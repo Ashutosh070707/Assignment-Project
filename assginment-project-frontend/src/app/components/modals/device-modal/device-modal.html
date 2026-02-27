@@ -1,40 +1,82 @@
-<div class="modal-overlay" (click)="closeModal()">
-  <div class="modal-container" (click)="$event.stopPropagation()">
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  
+  <div class="modal-container">
     
     <div class="modal-header">
       <h3>
-        @if (mode === 'add') { Add New Device } 
+        @if (modalService.activeModal() === 'add-device') { Add New Device } 
         @else { Update Device }
       </h3>
-      <button class="close-btn" (click)="closeModal()">&#10005;</button>
+      <button type="button" class="close-btn" (click)="closeModal()">&#10005;</button>
     </div>
 
-    <div class="modal-body">
-      <div class="form-group">
-        <label>Device Name</label>
-        <input type="text" class="form-input" placeholder="e.g., Main Router">
-      </div>
-      <div class="form-group">
-        <label>Device Type</label>
-        <input type="text" class="form-input" placeholder="e.g., Networking">
-      </div>
-      <div class="form-group">
-        <label>Part Number</label>
-        <input type="text" class="form-input" placeholder="e.g., NTK-123">
-      </div>
-      <div class="form-group">
-        <label>Building Name</label>
-        <input type="text" class="form-input" placeholder="e.g., Block A">
-      </div>
-    </div>
+    <form [formGroup]="deviceForm" (ngSubmit)="onSubmit($event)">
+      
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Device Name</label>
+          <input type="text" formControlName="deviceName" class="form-input" placeholder="e.g., Core-Router-01">
+        </div>
+        
+        <div class="form-group">
+          <label>Device Type</label>
+          <select formControlName="deviceType" class="form-input">
+            <option value="" disabled selected>-- Select Device Type --</option>
+            <option value="OPTICAL_CHASSIS">Optical Chassis</option>
+            <option value="CORE_ROUTER">Core Router</option>
+            <option value="EDGE_ROUTER">Edge Router</option>
+            <option value="AGGREGATION_SWITCH">Aggregation Switch</option>
+            <option value="MULTIPLEXER">Multiplexer</option>
+            <option value="STORAGE_ARRAY">Storage Array</option>
+            <option value="SERVER_RACK">Server Rack</option>
+            <option value="POWER_DISTRIBUTION_UNIT">Power Distribution Unit</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Part Number</label>
+          <input type="text" formControlName="partNumber" class="form-input" placeholder="e.g., ABC-777">
+        </div>
+        
+        <div class="form-group">
+          <label>Building Name</label>
+          <select formControlName="buildingName" class="form-input">
+            <option value="" disabled selected>-- Select Building --</option>
+            <option value="Hanover_US">Hanover (US)</option>
+            <option value="Gurugram_TRIL_India">Gurugram TRIL (India)</option>
+            <option value="Gurugram_JSK_India">Gurugram JSK (India)</option>
+            <option value="Ottawa_Canada">Ottawa (Canada)</option>
+            <option value="London_UK">London (UK)</option>
+            <option value="Montreal_Canada">Montreal (Canada)</option>
+            <option value="Sydney_Australia">Sydney (Australia)</option>
+          </select>
+        </div>
 
-    <div class="modal-footer">
-      <button class="btn btn-cancel" (click)="closeModal()">Cancel</button>
-      <button class="btn btn-primary">
-        @if (mode === 'add') { Add Device } 
-        @else { Save Changes }
-      </button>
-    </div>
+        <div class="form-group">
+          <label>Number of Shelf Positions</label>
+          <input type="number" formControlName="numberOfShelfPositions" class="form-input" min="0" placeholder="e.g., 4">
+        </div>
+      </div>
 
+      @if (errorMessage()) {
+        <div class="error-banner">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" (click)="closeModal()" [disabled]="isSubmitting()">Cancel</button>
+        
+        <button type="submit" class="btn btn-primary" [disabled]="deviceForm.invalid || isSubmitting()">
+          @if (isSubmitting()) {
+            <span class="btn-spinner"></span> Processing...
+          } @else {
+            @if (modalService.activeModal() === 'add-device') { Add Device } 
+            @else { Save Changes }
+          }
+        </button>
+      </div>
+
+    </form>
   </div>
 </div>

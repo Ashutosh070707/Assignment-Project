@@ -194,6 +194,21 @@
   background-color: rgb(11, 140, 11);
 }
 
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  color: var(--text-main);
+  opacity: 0.6;
+  text-align: center;
+}
+
+.empty-state-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
 
 
 

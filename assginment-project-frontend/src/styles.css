@@ -36,6 +36,7 @@
   /* Sidebar CSS variables */
   --sidebar-border-right-color: white;
   --sidebar-allDevice-selected: rgba(211, 191, 191, 0.15);
+  --spinner-border-color: rgb(190, 189, 189);
 
   /* DeviceSummary */
   --dropdown-default-bg-color: purple;
@@ -64,6 +65,7 @@
    /* Sidebar CSS variables */
   --sidebar-border-right-color: black;
   --sidebar-allDevice-selected: rgba(118, 109, 109, 0.15);
+  --spinner-border-color: rgb(92, 149, 235);
 
   /* DeviceSummary */
   --dropdown-default-bg-color: rgb(168, 168, 168);

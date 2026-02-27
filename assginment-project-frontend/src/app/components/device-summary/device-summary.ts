@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { ModalService } from '../../services/modal';
 import { GlobalDeviceSummary } from '../../models/device-summary.model';
+import { DeviceService } from '../../services/device';
 
 @Component({
   selector: 'app-device-summary',
@@ -9,61 +10,12 @@ import { GlobalDeviceSummary } from '../../models/device-summary.model';
   styleUrl: './device-summary.css',
 })
 export class DeviceSummary {
-  constructor(public modalService: ModalService) {}
+  constructor(public modalService: ModalService, public deviceService: DeviceService) {}
 
   isDeviceInfoOpen = signal(true);
   isShelfPositionsOpen = signal(false);
   isShelvesOpen = signal(false);
-  isSettingOpen = signal(false);
-
-  deviceSummary = signal<GlobalDeviceSummary>({
-    device: {
-      id: 'd-998877',
-      deviceName: 'Core-Aggregator-Noida',
-      partNumber: 'NTK-503-AB',
-      deviceType: 'Optical Transport Node',
-      buildingName: 'Noida-DC-01',
-      noOfShelfPositions: 4,
-    },
-    shelfPairs: [
-      {
-        shelfPosition: {
-          id: 'sp-01',
-          deviceId: 'OPT-NODE-A',
-        },
-        shelf: {
-          id: 'sh-01',
-          shelfName: 'Main-Processing-Shelf',
-          partNumber: 'NTK-100-BB',
-        },
-      },
-      {
-        shelfPosition: {
-          id: 'sp-02',
-          deviceId: 'OPT-NODE-A',
-        },
-        shelf: null,
-      },
-      {
-        shelfPosition: {
-          id: 'sp-03',
-          deviceId: 'OPT-NODE-A',
-        },
-        shelf: {
-          id: 'sh-03',
-          shelfName: 'Power-Distribution-Shelf',
-          partNumber: 'NTK-PWR-AC',
-        },
-      },
-      {
-        shelfPosition: {
-          id: 'sp-04',
-          deviceId: 'OPT-NODE-A',
-        },
-        shelf: null,
-      },
-    ],
-  });
+  isSettingOpen = signal(false); 
 
   toggleDeviceInfo() {
     this.isDeviceInfoOpen.update((v) => !v);

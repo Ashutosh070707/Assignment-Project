@@ -9,10 +9,13 @@
       @for (device of deviceService.devices(); track device.id) {
         <li
           class="device-item"
-          [class.selected]="selectedDeviceId() === device.id"
-          (click)="selectDevice(device.id)"
+          [class.selected]="deviceService.selectedDeviceName() === device.deviceName"
+          (click)="selectDevice(device.deviceName)"
         >
-          {{ device.deviceName }}
+          <span>{{ device.deviceName }}</span>
+          @if (deviceService.loadingDeviceName() === device.deviceName) {
+            <div class="spinner"></div>
+          }
         </li>
       } @empty {
         <li class="no-device">No Device</li>

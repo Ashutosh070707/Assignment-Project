@@ -1,154 +1,167 @@
 <div class="device-summary-container">
-  <div
-    class="dropdown-deviceinfo"
-    [class.deviceInfoSelected]="isDeviceInfoOpen()"
-    (click)="toggleDeviceInfo()"
-  >
-    <span>Device Info</span>
-    <span class="arrow" [class.open]="isDeviceInfoOpen()">&#9662;</span>
-  </div>
-  @if (isDeviceInfoOpen()) {
-    <div class="device-info table-wrapper">
-      <div class="table-scroll-container">
-        <table class="device-info-table">
-          <tbody>
-            <tr>
-              <th>ID</th>
-              <td>{{ deviceSummary().device.id }}</td>
-            </tr>
-            <tr>
-              <th>Name</th>
-              <td>{{ deviceSummary().device.deviceName }}</td>
-            </tr>
-            <tr>
-              <th>Type</th>
-              <td>{{ deviceSummary().device.deviceType }}</td>
-            </tr>
-            <tr>
-              <th>Part Number</th>
-              <td>{{ deviceSummary().device.partNumber }}</td>
-            </tr>
-            <tr>
-              <th>Building Name</th>
-              <td>{{ deviceSummary().device.buildingName }}</td>
-            </tr>
-            <tr>
-              <th>No. of ShelfPositons</th>
-              <td>{{ deviceSummary().device.noOfShelfPositions }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  }
 
-  <div
-    class="dropdown-shelfPositions"
-    [class.shelfPositionsSelected]="isShelfPositionsOpen()"
-    (click)="toggleShelfPositions()"
-  >
-    <span>ShelfPositions</span>
-    <span class="arrow" [class.open]="isShelfPositionsOpen()">&#9662;</span>
-  </div>
-  @if (isShelfPositionsOpen()) {
-    <div class="shelfPosition-header">
-      <span>No. of ShelfPositions: {{deviceSummary().device.noOfShelfPositions}}</span>
-      <button class="text-btn-add" (click)="modalService.openModal('add-shelf-position')">Add ShelfPosition</button>
+  @if (deviceService.selectedDeviceSummary(); as summary) {
+
+    <div
+      class="dropdown-deviceinfo"
+      [class.deviceInfoSelected]="isDeviceInfoOpen()"
+      (click)="toggleDeviceInfo()" 
+    >
+      <span>Device Info</span>
+      <span class="arrow" [class.open]="isDeviceInfoOpen()">&#9662;</span>
     </div>
-    <div class="device-info table-wrapper">
-      <div class="table-scroll-container">
-        <table class="device-info-table">
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>ShelfPosition Id</th>
-              <th>Shelf</th>
-              <th>Action on Shelf</th>
-              <th>Action on ShelfPosition</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (shelfPair of deviceSummary().shelfPairs; track $index) {
+    @if (isDeviceInfoOpen()) {
+      <div class="device-info table-wrapper">
+        <div class="table-scroll-container">
+          <table class="device-info-table">
+            <tbody>
               <tr>
-                <td>{{ $index + 1 }}.</td>
-                <td>{{ shelfPair.shelfPosition?.id }}</td>
-                <td>{{ shelfPair.shelf?.shelfName ? shelfPair.shelf?.shelfName : 'empty' }}</td>
-
-                <td>
-                  @if (shelfPair.shelf?.shelfName) {
-                    <button class="text-btn-delete" (click)="modalService.openModal('delete-shelf')">Delete</button>
-                  } @else {
-                    <button class="text-btn-add" (click)="modalService.openModal('add-shelf')">Add</button>
-                  }
-                </td>
-
-                <td><button class="text-btn-delete" (click)="modalService.openModal('delete-shelf-position')">Delete</button></td>
+                <th>ID</th>
+                <td>{{ summary.device.id }}</td>
               </tr>
-            }
-          </tbody>
-        </table>
+              <tr>
+                <th>Name</th>
+                <td>{{ summary.device.deviceName }}</td>
+              </tr>
+              <tr>
+                <th>Type</th>
+                <td>{{ summary.device.deviceType }}</td>
+              </tr>
+              <tr>
+                <th>Part Number</th>
+                <td>{{ summary.device.partNumber }}</td>
+              </tr>
+              <tr>
+                <th>Building Name</th>
+                <td>{{ summary.device.buildingName }}</td>
+              </tr>
+              <tr>
+                <th>No. of ShelfPositions</th>
+                <td>{{ summary.device.numberOfShelfPositions }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  }
+    }
 
-  <div class="dropdown-shelves" [class.shelvesSelected]="isShelvesOpen()" (click)="toggleShelves()">
-    <span>Shelves</span>
-    <span class="arrow" [class.open]="isShelvesOpen()">&#9662;</span>
-  </div>
-  @if (isShelvesOpen()) {
-    <div class="device-info table-wrapper">
-      <div class="table-scroll-container">
-        <table class="device-info-table">
-          <thead>
-            <tr>
-              <th>ShelfPosition Id</th>
-              <th>Shelf Id</th>
-              <th>Shelf Name</th>
-              <th>Part Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (shelfPair of deviceSummary().shelfPairs; track $index) {
-              @if (shelfPair.shelf?.shelfName) {
+    <div
+      class="dropdown-shelfPositions"
+      [class.shelfPositionsSelected]="isShelfPositionsOpen()"
+      (click)="toggleShelfPositions()"
+    >
+      <span>ShelfPositions</span>
+      <span class="arrow" [class.open]="isShelfPositionsOpen()">&#9662;</span>
+    </div>
+    @if (isShelfPositionsOpen()) {
+      <div class="shelfPosition-header">
+        <span>No. of ShelfPositions: {{ summary.device.numberOfShelfPositions }}</span>
+        <button class="text-btn-add" (click)="modalService.openModal('add-shelf-position')">Add ShelfPosition</button>
+      </div>
+      <div class="device-info table-wrapper">
+        <div class="table-scroll-container">
+          <table class="device-info-table">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>ShelfPosition Id</th>
+                <th>Shelf</th>
+                <th>Action on Shelf</th>
+                <th>Action on ShelfPosition</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (shelfPair of summary.shelfPairs; track $index) {
                 <tr>
+                  <td>{{ $index + 1 }}.</td>
                   <td>{{ shelfPair.shelfPosition?.id }}</td>
-                  <td>{{ shelfPair.shelf?.id }}</td>
-                  <td>{{ shelfPair.shelf?.shelfName }}</td>
-                  <td>{{ shelfPair.shelf?.partNumber }}</td>
+                  <td>{{ shelfPair.shelf?.shelfName ? shelfPair.shelf?.shelfName : 'empty' }}</td>
+
+                  <td>
+                    @if (shelfPair.shelf?.shelfName) {
+                      <button class="text-btn-delete" (click)="modalService.openModal('delete-shelf')">Delete</button>
+                    } @else {
+                      <button class="text-btn-add" (click)="modalService.openModal('add-shelf')">Add</button>
+                    }
+                  </td>
+
+                  <td><button class="text-btn-delete" (click)="modalService.openModal('delete-shelf-position')">Delete</button></td>
                 </tr>
               }
-            }
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
+    }
+
+    <div class="dropdown-shelves" [class.shelvesSelected]="isShelvesOpen()" (click)="toggleShelves()">
+      <span>Shelves</span>
+      <span class="arrow" [class.open]="isShelvesOpen()">&#9662;</span>
     </div>
+    @if (isShelvesOpen()) {
+      <div class="device-info table-wrapper">
+        <div class="table-scroll-container">
+          <table class="device-info-table">
+            <thead>
+              <tr>
+                <th>ShelfPosition Id</th>
+                <th>Shelf Id</th>
+                <th>Shelf Name</th>
+                <th>Part Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (shelfPair of summary.shelfPairs; track $index) {
+                @if (shelfPair.shelf?.shelfName) {
+                  <tr>
+                    <td>{{ shelfPair.shelfPosition?.id }}</td>
+                    <td>{{ shelfPair.shelf?.id }}</td>
+                    <td>{{ shelfPair.shelf?.shelfName }}</td>
+                    <td>{{ shelfPair.shelf?.partNumber }}</td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    <div
+      class="dropdown-setting"
+      [class.settingSelected]="isSettingOpen()"
+      (click)="toggleSetting()"
+    >
+      <span>Setting</span>
+      <span class="arrow" [class.open]="isSettingOpen()">&#9662;</span>
+    </div>
+
+    @if (isSettingOpen()) {
+      <div class="device-info table-wrapper">
+        <div class="table-scroll-container">
+          <table class="device-info-table">
+            <tbody>
+              <tr>
+                <th>Update Device Information</th>
+                <td><button class="text-btn-add" (click)="modalService.openModal('update-device')">Update</button></td>
+              </tr>
+              <tr>
+                <th>Delete Device</th>
+                <td><button class="text-btn-delete" (click)="modalService.openModal('delete-device')">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+  } @else {
+    
+    <div class="empty-state-container">
+      <h2>No Device Selected</h2>
+      <p>Please select a device from the sidebar to view its details.</p>
+    </div>
+
   }
 
-  <div
-    class="dropdown-setting"
-    [class.settingSelected]="isSettingOpen()"
-    (click)="toggleSetting()"
-  >
-    <span>Setting</span>
-    <span class="arrow" [class.open]="isSettingOpen()">&#9662;</span>
-  </div>
-
-  @if (isSettingOpen()) {
-    <div class="device-info table-wrapper">
-      <div class="table-scroll-container">
-        <table class="device-info-table">
-          <tbody>
-            <tr>
-              <th>Update Device Information</th>
-              <td><button class="text-btn-add" (click)="modalService.openModal('update-device')">Update</button></td>
-            </tr>
-            <tr>
-              <th>Delete Device</th>
-              <td><button class="text-btn-delete" (click)="modalService.openModal('delete-device')">Delete</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  }
 </div>

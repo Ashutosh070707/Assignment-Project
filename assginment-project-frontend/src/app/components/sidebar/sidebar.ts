@@ -15,32 +15,30 @@ export interface Device {
 })
 export class Sidebar {
   isDropdownOpen = signal(false);
-  selectedDeviceId = signal<string | null>(null);
 
   constructor(public deviceService: DeviceService) {}
-
-  // // Mock data matching your wireframe
-  // devices = signal<Device[]>([
-  //   { id: '1', name: 'Device-1' },
-  //   { id: '2', name: 'Device-2' },
-  //   { id: '3', name: 'Device-3' },
-  //   { id: '4', name: 'Device-4' },
-  //   { id: '5', name: 'Device-5' },
-  //   { id: '6', name: 'Device-6' },
-  //   { id: '7', name: 'Device-7' },
-  // ]);
-
-  // devices = signal<Device[]>([]);
 
   toggleDropdown() {
     this.isDropdownOpen.update((isOpen) => !isOpen);
     if (!this.isDropdownOpen()) {
-      this.selectedDeviceId.set(null);
+      // Clear the selection globally if the dropdown is closed
+      this.deviceService.selectedDeviceName.set(null);
+      this.deviceService.selectedDeviceSummary.set(null);
     }
   }
 
-  selectDevice(id: string) {
-    this.selectedDeviceId.set(id);
-    // Later, we will use a Service here to tell the Main Content which device to load!
+  selectDevice(deviceName: string) {
+    // GUARD 1: Prevent clicking if this device is already selected
+    if (this.deviceService.selectedDeviceName() === deviceName) {
+      return; 
+    }
+
+    // GUARD 2: Prevent clicking ANY device if a fetch is currently in progress
+    if (this.deviceService.loadingDeviceName() !== null) {
+      return; 
+    }
+
+    // Tell the service to fetch the data!
+    this.deviceService.fetchDeviceSummary(deviceName);
   }
 }

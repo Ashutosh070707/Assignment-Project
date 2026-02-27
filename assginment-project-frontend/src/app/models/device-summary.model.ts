@@ -4,7 +4,7 @@ export interface Device {
   partNumber: string;
   deviceType: string;
   buildingName: string;
-  noOfShelfPositions: number;
+  numberOfShelfPositions: number;
 }
 
 export interface ShelfPosition {
