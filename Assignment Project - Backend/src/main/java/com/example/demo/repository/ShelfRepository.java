@@ -69,9 +69,9 @@ public class ShelfRepository {
         }
     }
 
-    public void deleteShelf(String shelfPositionId, String shelfName) {
+    public void deleteShelf(String shelfName) {
         final String cypher = """
-                MATCH (sp:ShelfPosition {id: $shelfPositionId})-[r:ATTACHED]->(s:Shelf {shelfName: $shelfName})
+                MATCH ()-[r:ATTACHED]->(s:Shelf {shelfName: $shelfName})
                 DELETE r
                 REMOVE s:Shelf
                 SET s:DeletedShelf
@@ -79,13 +79,12 @@ public class ShelfRepository {
 
         try {
             var result = driver.executableQuery(cypher).withParameters(Map.of(
-                    "shelfPositionId", shelfPositionId,
                     "shelfName", shelfName
             )).execute();
 
-            if (result.summary().counters().relationshipsDeleted() == 0) {
-                throw new IllegalArgumentException("There is no relation between ShelfPosition : " + shelfPositionId + " and Shelf : " + shelfName);
-            }
+//            if (result.summary().counters().relationshipsDeleted() == 0) {
+//                throw new IllegalArgumentException("There is no relation between ShelfPosition : " + shelfPositionId + " and Shelf : " + shelfName);
+//            }
         } catch (IllegalArgumentException ie) {
             throw ie;
         } catch (Exception e) {

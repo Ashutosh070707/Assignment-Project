@@ -35,15 +35,13 @@ public class ShelfService {
         }
     }
 
-    public void deleteShelf(DeleteShelf dto) {
+    public void deleteShelf(String shelfName) {
         try {
-            if (!shelfPositionRepository.isShelfPositionPresent(dto.getShelfPositionId())) {
-                throw new RuntimeException("ShelfPosition with id " + dto.getShelfPositionId() + " does not exist in the database");
+
+            if (!shelfRepository.isShelfPresent(shelfName)) {
+                throw new RuntimeException("Shelf with name " + shelfName + " does not exist in the database");
             }
-            if (!shelfRepository.isShelfPresent(dto.getShelfName())) {
-                throw new RuntimeException("Shelf with name " + dto.getShelfName() + " does not exist in the database");
-            }
-            shelfRepository.deleteShelf(dto.getShelfPositionId(), dto.getShelfName());
+            shelfRepository.deleteShelf(shelfName);
         } catch (Exception e) {
             System.err.println("Service Error: deleteShelf method failed. Reason: " + e.getMessage());
             throw new RuntimeException(e.getMessage(), e);

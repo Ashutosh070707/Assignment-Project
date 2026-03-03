@@ -7,14 +7,10 @@
     <app-device-summary></app-device-summary>
   </div>
 
-  @if (
+ @if (
     modalService.activeModal() === 'add-device' || modalService.activeModal() === 'update-device'
   ) {
-    <app-device-modal
-      [mode]="modalService.activeModal() === 'add-device' ? 'add' : 'update'"
-      (close)="modalService.closeModal()"
-    >
-    </app-device-modal>
+    <app-device-modal></app-device-modal>
   }
 
   @if (

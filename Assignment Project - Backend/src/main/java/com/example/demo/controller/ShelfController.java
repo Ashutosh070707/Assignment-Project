@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/shelfs")
+@RequestMapping("/api/shelves")
 public class ShelfController {
     private final ShelfService shelfService;
 
@@ -30,10 +30,10 @@ public class ShelfController {
         }
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteShelf(@Valid @RequestBody DeleteShelf dto) {
+    @DeleteMapping("/{shelfName}")
+    public ResponseEntity<?> deleteShelf(@PathVariable String shelfName) {
         try {
-            shelfService.deleteShelf(dto);
+            shelfService.deleteShelf(shelfName);
             return ResponseEntity.status(HttpStatus.OK).body("Shelf deleted successfully");
         } catch (Exception e) {
             System.err.println("Controller Error: Error in deleteShelf in ShelfController. Reason: " + e.getMessage());

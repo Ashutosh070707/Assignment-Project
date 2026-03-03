@@ -1,11 +1,9 @@
 <div class="device-summary-container">
-
   @if (deviceService.selectedDeviceSummary(); as summary) {
-
     <div
       class="dropdown-deviceinfo"
       [class.deviceInfoSelected]="isDeviceInfoOpen()"
-      (click)="toggleDeviceInfo()" 
+      (click)="toggleDeviceInfo()"
     >
       <span>Device Info</span>
       <span class="arrow" [class.open]="isDeviceInfoOpen()">&#9662;</span>
@@ -56,7 +54,17 @@
     @if (isShelfPositionsOpen()) {
       <div class="shelfPosition-header">
         <span>No. of ShelfPositions: {{ summary.device.numberOfShelfPositions }}</span>
-        <button class="text-btn-add" (click)="modalService.openModal('add-shelf-position')">Add ShelfPosition</button>
+        <button
+          class="text-btn-add add-position-btn"
+          (click)="onAddShelfPosition()"
+          [disabled]="isAddingPosition()"
+        >
+          @if (isAddingPosition()) {
+            <span class="btn-spinner"></span> Adding...
+          } @else {
+            Add ShelfPosition
+          }
+        </button>
       </div>
       <div class="device-info table-wrapper">
         <div class="table-scroll-container">
@@ -79,13 +87,32 @@
 
                   <td>
                     @if (shelfPair.shelf?.shelfName) {
-                      <button class="text-btn-delete" (click)="modalService.openModal('delete-shelf')">Delete</button>
+                      <button
+                        class="text-btn-delete"
+                        (click)="modalService.openModal('delete-shelf', shelfPair.shelf?.shelfName)"
+                      >
+                        Delete
+                      </button>
                     } @else {
-                      <button class="text-btn-add" (click)="modalService.openModal('add-shelf')">Add</button>
+                      <button
+                        class="text-btn-add"
+                        (click)="modalService.openModal('add-shelf', shelfPair.shelfPosition?.id)"
+                      >
+                        Add
+                      </button>
                     }
                   </td>
 
-                  <td><button class="text-btn-delete" (click)="modalService.openModal('delete-shelf-position')">Delete</button></td>
+                  <td>
+                    <button
+                      class="text-btn-delete"
+                      (click)="
+                        modalService.openModal('delete-shelf-position', shelfPair.shelfPosition?.id)
+                      "
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               }
             </tbody>
@@ -94,7 +121,11 @@
       </div>
     }
 
-    <div class="dropdown-shelves" [class.shelvesSelected]="isShelvesOpen()" (click)="toggleShelves()">
+    <div
+      class="dropdown-shelves"
+      [class.shelvesSelected]="isShelvesOpen()"
+      (click)="toggleShelves()"
+    >
       <span>Shelves</span>
       <span class="arrow" [class.open]="isShelvesOpen()">&#9662;</span>
     </div>
@@ -143,25 +174,29 @@
             <tbody>
               <tr>
                 <th>Update Device Information</th>
-                <td><button class="text-btn-add" (click)="modalService.openModal('update-device')">Update</button></td>
+                <td>
+                  <button class="text-btn-add" (click)="modalService.openModal('update-device')">
+                    Update
+                  </button>
+                </td>
               </tr>
               <tr>
                 <th>Delete Device</th>
-                <td><button class="text-btn-delete" (click)="modalService.openModal('delete-device')">Delete</button></td>
+                <td>
+                  <button class="text-btn-delete" (click)="modalService.openModal('delete-device')">
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     }
-
   } @else {
-    
     <div class="empty-state-container">
       <h2>No Device Selected</h2>
       <p>Please select a device from the sidebar to view its details.</p>
     </div>
-
   }
-
 </div>

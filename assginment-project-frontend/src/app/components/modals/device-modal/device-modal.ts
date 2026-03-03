@@ -46,12 +46,12 @@ export class DeviceModal implements OnInit {
     }
   }
 
-  onOverlayClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (target.classList.contains('modal-overlay')) {
-      this.closeModal();
-    }
-  }
+  // onOverlayClick(event: MouseEvent) {
+  //   const target = event.target as HTMLElement;
+  //   if (target.classList.contains('modal-overlay')) {
+  //     this.closeModal();
+  //   }
+  // }
 
   closeModal() {
     this.modalService.closeModal();

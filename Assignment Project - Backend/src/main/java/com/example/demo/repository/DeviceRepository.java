@@ -199,12 +199,13 @@ public class DeviceRepository {
 
     public void deleteDevice(String deviceName) {
         final String cypher = """
-                MATCH (d:Device {deviceName: $deviceName})
-                OPTIONAL MATCH (d)-[r:HAS]->(sp:ShelfPosition)
-                OPTIONAL MATCH (sp)-[p:ATTACHED]->(s:Shelf)
-                DELETE r, p
-                REMOVE d:Device, sp:ShelfPosition, s:Shelf
-                SET d:DeletedDevice, sp:DeletedShelfPosition, s:DeletedShelf
+                                MATCH (d:Device {deviceName: $deviceName})
+                                OPTIONAL MATCH (d)-[r:HAS]->(sp:ShelfPosition)
+                                OPTIONAL MATCH (sp)-[p:ATTACHED]->(s:Shelf)
+                //              DELETE r, p
+                                DELETE p
+                                REMOVE d:Device, sp:ShelfPosition, s:Shelf
+                                SET d:DeletedDevice, sp:DeletedShelfPosition, s:DeletedShelf
                 """;
 
         try {

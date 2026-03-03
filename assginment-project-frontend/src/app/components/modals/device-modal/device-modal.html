@@ -1,4 +1,6 @@
-<div class="modal-overlay" (click)="onOverlayClick($event)">
+<!-- (click)="onOverlayClick($event)" -->
+
+<div class="modal-overlay" >
   
   <div class="modal-container">
     
@@ -9,6 +11,11 @@
       </h3>
       <button type="button" class="close-btn" (click)="closeModal()">&#10005;</button>
     </div>
+     @if (errorMessage()) {
+        <div class="error-banner">
+          {{ errorMessage() }}
+        </div>
+      }
 
     <form [formGroup]="deviceForm" (ngSubmit)="onSubmit($event)">
       
@@ -28,8 +35,13 @@
             <option value="AGGREGATION_SWITCH">Aggregation Switch</option>
             <option value="MULTIPLEXER">Multiplexer</option>
             <option value="STORAGE_ARRAY">Storage Array</option>
-            <option value="SERVER_RACK">Server Rack</option>
             <option value="POWER_DISTRIBUTION_UNIT">Power Distribution Unit</option>
+            <option value="SERVER_RACK">Server Rack</option>
+            <option value="FIREWALL">Firewall</option>
+            <option value="LOAD_BALANCER">Load Balancer</option>
+            <option value="STANDALONE_SERVER">StandAlone Server</option>
+            <option value="OPTICAL_AMPLIFIER">Optical Amplifier</option>
+            <option value="COOLING_UNIT">Cooling Unit</option>
           </select>
         </div>
         
@@ -58,11 +70,7 @@
         </div>
       </div>
 
-      @if (errorMessage()) {
-        <div class="error-banner">
-          {{ errorMessage() }}
-        </div>
-      }
+     
 
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeModal()" [disabled]="isSubmitting()">Cancel</button>

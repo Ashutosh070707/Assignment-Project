@@ -1,21 +1,33 @@
-<div class="modal-overlay" (click)="closeModal()">
+<div class="modal-overlay">
   <div class="modal-container" (click)="$event.stopPropagation()">
-    
     <div class="modal-header">
       <h3>Delete {{ itemType }}</h3>
       <button class="close-btn" (click)="closeModal()">&#10005;</button>
     </div>
-
+    @if (errorMessage()) {
+      <div class="error-banner">
+        {{ errorMessage() }}
+      </div>
+    }
     <div class="modal-body">
       <p class="delete-warning">
-        Are you sure you want to delete this {{ itemType }}? This action cannot be undone and all associated data will be permanently removed.
+        Are you sure you want to delete this {{ itemType }}? This action cannot be undone and all
+        associated data will be permanently removed.
       </p>
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-cancel" (click)="closeModal()">Cancel</button>
-      <button class="btn btn-danger">Yes, Delete</button>
-    </div>
+      <button class="btn btn-cancel" (click)="closeModal()" [disabled]="isSubmitting()">
+        Cancel
+      </button>
 
+      <button class="btn btn-danger" (click)="onConfirmDelete()" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <span class="btn-spinner"></span> Deleting...
+        } @else {
+          Yes, Delete
+        }
+      </button>
+    </div>
   </div>
 </div>

@@ -52,7 +52,7 @@ public class DeviceController {
         }
     }
 
-    @DeleteMapping("/delete/{deviceName}")
+    @DeleteMapping("/{deviceName}")
     public ResponseEntity<?> deleteDevice(@PathVariable String deviceName) {
         try {
             deviceService.deleteDevice(deviceName);

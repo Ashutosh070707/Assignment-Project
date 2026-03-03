@@ -27,7 +27,7 @@ public class ShelfPositionController {
         }
     }
 
-    @DeleteMapping("/delete/{deviceName}/{shelfPositionId}")
+    @DeleteMapping("/{deviceName}/{shelfPositionId}")
     public ResponseEntity<?> deleteShelfPosition(@PathVariable String deviceName, @PathVariable String shelfPositionId) {
         try {
             shelfPositionService.deleteShelfPosition(deviceName, shelfPositionId);
