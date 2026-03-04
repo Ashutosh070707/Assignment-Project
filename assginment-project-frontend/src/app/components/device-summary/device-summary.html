@@ -139,6 +139,7 @@
                 <th>Shelf Id</th>
                 <th>Shelf Name</th>
                 <th>Part Number</th>
+                <th>Action on Shelf</th>
               </tr>
             </thead>
             <tbody>
@@ -149,6 +150,16 @@
                     <td>{{ shelfPair.shelf?.id }}</td>
                     <td>{{ shelfPair.shelf?.shelfName }}</td>
                     <td>{{ shelfPair.shelf?.partNumber }}</td>
+                    <td>
+                    <button
+                      class="text-btn-add"
+                      (click)="
+                        modalService.openModal('update-shelf', shelfPair.shelf?.id)
+                      "
+                    >
+                      Update
+                    </button>
+                  </td>
                   </tr>
                 }
               }

@@ -1,9 +1,5 @@
-<!-- (click)="onOverlayClick($event)" -->
-
-<div class="modal-overlay" >
-  
+<div class="modal-overlay">
   <div class="modal-container">
-    
     <div class="modal-header">
       <h3>
         @if (modalService.activeModal() === 'add-device') { Add New Device } 
@@ -11,18 +7,33 @@
       </h3>
       <button type="button" class="close-btn" (click)="closeModal()">&#10005;</button>
     </div>
-     @if (errorMessage()) {
-        <div class="error-banner">
-          {{ errorMessage() }}
-        </div>
-      }
+    
+    @if (errorMessage()) {
+      <div class="error-banner">
+        {{ errorMessage() }}
+      </div>
+    }
 
     <form [formGroup]="deviceForm" (ngSubmit)="onSubmit($event)">
-      
       <div class="modal-body">
+        
         <div class="form-group">
           <label>Device Name</label>
-          <input type="text" formControlName="deviceName" class="form-input" placeholder="e.g., Core-Router-01">
+          <input 
+            type="text" 
+            formControlName="deviceName" 
+            class="form-input" 
+            [class.input-error]="deviceForm.get('deviceName')?.hasError('nameTaken')"
+            placeholder="e.g., Core-Router-01"
+          >
+          <div class="validation-messages">
+            @if (deviceForm.get('deviceName')?.pending) {
+              <small class="text-loading">Checking availability...</small>
+            }
+            @if (deviceForm.get('deviceName')?.hasError('nameTaken') && deviceForm.get('deviceName')?.touched) {
+              <small class="text-error">This device name is already taken.</small>
+            }
+          </div>
         </div>
         
         <div class="form-group">
@@ -64,18 +75,36 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label>Number of Shelf Positions</label>
-          <input type="number" formControlName="numberOfShelfPositions" class="form-input" min="0" placeholder="e.g., 4">
-        </div>
+        @if (modalService.activeModal() === 'add-device') {
+          <div class="form-group">
+            <label>Number of Shelf Positions</label>
+            <input 
+              type="number" 
+              formControlName="numberOfShelfPositions" 
+              class="form-input" 
+              [class.input-error]="deviceForm.get('numberOfShelfPositions')?.invalid && deviceForm.get('numberOfShelfPositions')?.touched"
+              min="1" 
+              max="14" 
+              placeholder="e.g., 4"
+            >
+            <div class="validation-messages">
+              @if (deviceForm.get('numberOfShelfPositions')?.invalid && deviceForm.get('numberOfShelfPositions')?.touched) {
+                @if (deviceForm.get('numberOfShelfPositions')?.hasError('min') || deviceForm.get('numberOfShelfPositions')?.hasError('max')) {
+                  <small class="text-error">Value must be between 1 and 14.</small>
+                }
+                @if (deviceForm.get('numberOfShelfPositions')?.hasError('required')) {
+                  <small class="text-error">This field is required.</small>
+                }
+              }
+            </div>
+          </div>
+        }
       </div>
-
-     
 
       <div class="modal-footer">
         <button type="button" class="btn btn-cancel" (click)="closeModal()" [disabled]="isSubmitting()">Cancel</button>
         
-        <button type="submit" class="btn btn-primary" [disabled]="deviceForm.invalid || isSubmitting()">
+        <button type="submit" class="btn btn-primary" [disabled]="deviceForm.invalid || deviceForm.pending || isSubmitting()">
           @if (isSubmitting()) {
             <span class="btn-spinner"></span> Processing...
           } @else {

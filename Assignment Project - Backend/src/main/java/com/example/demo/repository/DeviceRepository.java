@@ -2,11 +2,13 @@ package com.example.demo.repository;
 
 import com.example.demo.DTO.DeviceSummary;
 import com.example.demo.DTO.ShelfPair;
+import com.example.demo.DTO.UpdateDevice;
 import com.example.demo.entity.Device;
 import com.example.demo.entity.Shelf;
 import com.example.demo.entity.ShelfPosition;
 import com.example.demo.enums.BuildingName;
 import com.example.demo.enums.DeviceType;
+import com.example.demo.exception.customExceptions.DatabaseOperationException;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.types.Node;
 import org.springframework.stereotype.Repository;
@@ -36,8 +38,8 @@ public class DeviceRepository {
 
             return !result.records().isEmpty();
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to check if device exists. Reason: " + e.getMessage());
-            throw new RuntimeException("Database error while checking device existence.", e);
+            System.err.println("Repository Error: Failed to execute isDevicePresent method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while checking whether device is present in database or not.");
         }
     }
 
@@ -66,8 +68,8 @@ public class DeviceRepository {
 
             return allDevices;
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to execute getAllDevices method in DeviceRepository" + e.getMessage());
-            throw new RuntimeException("Failed to execute getAllDevices method in DeviceRepository", e);
+            System.err.println("Repository Error: Failed to execute getAllDevices method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while fetching all devices.");
         }
     }
 
@@ -100,10 +102,9 @@ public class DeviceRepository {
 
             deviceSummary.setDevice(device);
 
-
             List<ShelfPair> shelfPairs = new ArrayList<>();
 
-// Iterate over the list of maps returned as 'shelfPairs'
+            // Iterate over the list of maps returned as 'shelfPairs'
             record.get("shelfPairs").asList(value -> value).forEach(pairValue -> {
 
                 org.neo4j.driver.Value spValue = pairValue.get("shelfPosition");
@@ -134,14 +135,12 @@ public class DeviceRepository {
                     shelfPairs.add(new ShelfPair(shelfPosition, shelf));
                 }
             });
-
-// Set the unified list to your DTO
             deviceSummary.setShelfPairs(shelfPairs);
 
             return Optional.of(deviceSummary);
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to execute getDeviceDetails function in DeviceRepository" + e.getMessage());
-            throw new RuntimeException("Failed to execute getDeviceDetails function in DeviceRepository", e);
+            System.err.println("Repository Error: Failed to execute getDeviceDetails method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while fetching device details.");
         }
     }
 
@@ -192,8 +191,8 @@ public class DeviceRepository {
 
             return Optional.of(savedDevice);
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to execute Cypher in createDevice function in DeviceRepository" + e.getMessage());
-            throw new RuntimeException("Failed to execute Cypher in createDevice function in DeviceRepository.", e);
+            System.err.println("Repository Error: Failed to execute createDevice method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while creating device.");
         }
     }
 
@@ -202,7 +201,6 @@ public class DeviceRepository {
                                 MATCH (d:Device {deviceName: $deviceName})
                                 OPTIONAL MATCH (d)-[r:HAS]->(sp:ShelfPosition)
                                 OPTIONAL MATCH (sp)-[p:ATTACHED]->(s:Shelf)
-                //              DELETE r, p
                                 DELETE p
                                 REMOVE d:Device, sp:ShelfPosition, s:Shelf
                                 SET d:DeletedDevice, sp:DeletedShelfPosition, s:DeletedShelf
@@ -212,15 +210,49 @@ public class DeviceRepository {
             var result = driver.executableQuery(cypher).withParameters(Map.of(
                     "deviceName", deviceName
             )).execute();
-
-            if (result.summary().counters().labelsRemoved() == 0) {
-                throw new IllegalArgumentException("Device with name '" + deviceName + "' does not exist or is already deleted.");
-            }
-        } catch (IllegalArgumentException ie) {
-            throw ie;
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to execute deleteDevice in DeviceRepository. Reason: " + e.getMessage());
-            throw new RuntimeException("Failed to execute deleteDevice in DeviceRepository", e);
+            System.err.println("Repository Error: Failed to execute deleteDevice method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while deleting device.");
+        }
+    }
+
+    public Optional<Device> updateDevice(UpdateDevice dto) {
+        final String cypher = """
+                MATCH (d:Device {deviceName: $oldDeviceName})
+                SET d.deviceName = $newDeviceName,
+                d.partNumber = $newPartNumber,
+                d.deviceType = $newDeviceType,
+                d.buildingName = $newBuildingName
+                RETURN d;
+                """;
+
+        try {
+            var result = driver.executableQuery(cypher).withParameters(Map.of(
+                    "oldDeviceName", dto.getOldDeviceName(),
+                    "newDeviceName", dto.getNewDeviceName(),
+                    "newPartNumber", dto.getNewPartNumber(),
+                    "newDeviceType", dto.getNewDeviceType().name(),
+                    "newBuildingName", dto.getNewBuildingName().name()
+            )).execute();
+
+            if (result.records().isEmpty()) {
+                return Optional.empty();
+            }
+
+            var record = result.records().getFirst();
+            Node node = record.get("d").asNode();
+            Device updatedDevice = new Device();
+            updatedDevice.setId(node.get("id").asString());
+            updatedDevice.setDeviceName(node.get("deviceName").asString());
+            updatedDevice.setPartNumber(node.get("partNumber").asString());
+            updatedDevice.setBuildingName(BuildingName.valueOf(node.get("buildingName").asString()));
+            updatedDevice.setDeviceType(DeviceType.valueOf(node.get("deviceType").asString()));
+            updatedDevice.setNumberOfShelfPositions(node.get("numberOfShelfPositions").asInt());
+
+            return Optional.of(updatedDevice);
+        } catch (Exception e) {
+            System.err.println("Repository Error: Failed to execute updateDevice method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while updating device.");
         }
     }
 }

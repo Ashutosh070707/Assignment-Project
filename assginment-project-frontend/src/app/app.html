@@ -31,7 +31,7 @@
     </app-delete-modal>
   }
 
-  @if (modalService.activeModal() === 'add-shelf') {
+  @if (modalService.activeModal() === 'add-shelf' || modalService.activeModal() === 'update-shelf') {
     <app-shelf-modal (close)="modalService.closeModal()"></app-shelf-modal>
   }
 

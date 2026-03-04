@@ -6,6 +6,7 @@ export type ModalType =
   | 'update-device'
   | 'delete-device'
   | 'add-shelf'
+  | 'update-shelf'
   | 'delete-shelf'
   | 'add-shelf-position'
   | 'delete-shelf-position';

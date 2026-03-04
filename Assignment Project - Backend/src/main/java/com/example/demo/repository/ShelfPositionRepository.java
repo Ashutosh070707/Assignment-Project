@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.ShelfPosition;
+import com.example.demo.exception.customExceptions.DatabaseOperationException;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.types.Node;
 import org.springframework.stereotype.Repository;
@@ -29,8 +30,8 @@ public class ShelfPositionRepository {
 
             return !result.records().isEmpty();
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to execute isShelfPositionPresent method in ShelfPositionRepository. Reason: " + e.getMessage());
-            throw new RuntimeException("Failed to execute isShelfPositionPresent method in ShelfPositionRepository", e);
+            System.err.println("Repository Error: Failed to execute isShelfPositionPresent method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while checking whether shelfPosition is present in database or not.");
         }
     }
 
@@ -66,8 +67,8 @@ public class ShelfPositionRepository {
 
             return Optional.of(savedShelfPosition);
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to execute Cypher in createShelfPositionAndAttach function in ShelfPositionRepository" + e.getMessage());
-            throw new RuntimeException("Failed to execute Cypher in createShelfPositionAndAttach function in ShelfPositionRepository.", e);
+            System.err.println("Repository Error: Failed to execute createShelfPositionAndAttach method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while creating shelfPosition.");
         }
     }
 
@@ -89,11 +90,10 @@ public class ShelfPositionRepository {
             if (result.summary().counters().relationshipsDeleted() == 0) {
                 throw new IllegalArgumentException("Current shelfPosition with id " + shelfPositionId + " is not attached with device deviceName " + deviceName);
             }
-        } catch (IllegalArgumentException ie) {
-            throw ie;
+
         } catch (Exception e) {
-            System.err.println("Repository Error: Failed to execute deleteShelfPosition method in ShelfPositionRepository. Reason: " + e.getMessage());
-            throw new RuntimeException("Failed to execute deleteShelfPosition method in ShelfPositionRepository", e);
+            System.err.println("Repository Error: Failed to execute deleteShelfPosition method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while deleting shelfPosition.");
         }
     }
 }

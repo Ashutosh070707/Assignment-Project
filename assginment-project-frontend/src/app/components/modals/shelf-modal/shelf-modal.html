@@ -1,9 +1,13 @@
 <div class="modal-overlay">
   <div class="modal-container" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h3>Add New Shelf</h3>
+      <h3>
+        @if (modalService.activeModal() === 'add-shelf') { Add New Shelf }
+        @else { Update Shelf }
+      </h3>
       <button type="button" class="close-btn" (click)="closeModal()">&#10005;</button>
     </div>
+    
     @if (errorMessage()) {
       <div class="error-banner">
         {{ errorMessage() }}
@@ -18,8 +22,19 @@
             type="text"
             formControlName="shelfName"
             class="form-input"
+            [class.input-error]="shelfForm.get('shelfName')?.hasError('nameTaken')"
             placeholder="e.g., Processing Shelf"
           />
+          
+          <div class="validation-messages">
+            @if (shelfForm.get('shelfName')?.pending) {
+              <small class="text-loading">Checking availability...</small>
+            }
+            @if (shelfForm.get('shelfName')?.hasError('nameTaken') && shelfForm.get('shelfName')?.touched) {
+              <small class="text-error">This shelf name is already taken.</small>
+            }
+          </div>
+
         </div>
         <div class="form-group">
           <label>Part Number</label>
@@ -45,12 +60,13 @@
         <button
           type="submit"
           class="btn btn-primary"
-          [disabled]="shelfForm.invalid || isSubmitting()"
+          [disabled]="shelfForm.invalid || shelfForm.pending || isSubmitting()"
         >
           @if (isSubmitting()) {
-            <span class="btn-spinner"></span> Adding...
+            <span class="btn-spinner"></span> 
+            @if (modalService.activeModal() === 'add-shelf') { Adding... } @else { Updating... }
           } @else {
-            Add Shelf
+            @if (modalService.activeModal() === 'add-shelf') { Add Shelf } @else { Save Changes }
           }
         </button>
       </div>

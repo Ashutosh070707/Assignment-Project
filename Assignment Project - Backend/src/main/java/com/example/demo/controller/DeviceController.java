@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.DTO.DeviceSummary;
+import com.example.demo.DTO.UpdateDevice;
 import com.example.demo.entity.Device;
 import com.example.demo.service.DeviceService;
 import jakarta.validation.Valid;
@@ -21,45 +22,38 @@ public class DeviceController {
 
     @GetMapping("/allDevices")
     public ResponseEntity<?> getAllDevices() {
-        try {
-            List<Device> fetchedDevices = deviceService.getAllDevices();
-            return ResponseEntity.status(HttpStatus.OK).body(fetchedDevices);
-        } catch (Exception e) {
-            System.err.println("Controller Error: Error in getAllDevices in DeviceController. Reason: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        List<Device> fetchedDevices = deviceService.getAllDevices();
+        return ResponseEntity.status(HttpStatus.OK).body(fetchedDevices);
     }
 
     @GetMapping("/deviceDetails/{deviceName}")
     public ResponseEntity<?> getDeviceDetails(@PathVariable String deviceName) {
-        try {
-            DeviceSummary deviceSummary = deviceService.getDeviceDetails(deviceName);
-            return ResponseEntity.status(HttpStatus.OK).body(deviceSummary);
-        } catch (Exception e) {
-            System.err.println("Controller Error: Error in getDeviceDetails in DeviceController. Reason: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        DeviceSummary deviceSummary = deviceService.getDeviceDetails(deviceName);
+        return ResponseEntity.ok(deviceSummary);
     }
 
     @PostMapping("/")
     public ResponseEntity<?> createDevice(@Valid @RequestBody Device device) {
-        try {
-            Device savedDevice = deviceService.createDevice(device);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedDevice);
-        } catch (Exception e) {
-            System.err.println("Controller Error: Error in createDevice in DeviceController. Reason: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        Device savedDevice = deviceService.createDevice(device);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedDevice);
     }
 
     @DeleteMapping("/{deviceName}")
     public ResponseEntity<?> deleteDevice(@PathVariable String deviceName) {
-        try {
-            deviceService.deleteDevice(deviceName);
-            return ResponseEntity.status(HttpStatus.OK).body("Device deleted successfully");
-        } catch (Exception e) {
-            System.err.println("Controller Error: Error in deleteDevice in DeviceController. Reason: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        deviceService.deleteDevice(deviceName);
+        return ResponseEntity.status(HttpStatus.OK).body("Device deleted successfully");
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateDevice(@Valid @RequestBody UpdateDevice dto) {
+        Device updatedDevice = deviceService.updateDevice(dto);
+        return ResponseEntity.ok(updatedDevice);
+    }
+
+    @GetMapping("/check/{newDeviceName}")
+    public ResponseEntity<?> checkValidity(@PathVariable String newDeviceName) {
+        deviceService.checkValidity(newDeviceName);
+        return ResponseEntity.ok("Valid newDeviceName");
+    }
+
 }

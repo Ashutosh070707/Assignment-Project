@@ -39,3 +39,27 @@
   align-items: center;
   justify-content: center;
 }
+
+
+/* //////////////////// */
+.validation-messages {
+  min-height: 20px;
+  margin-top: 4px;
+}
+
+.text-loading {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.text-error {
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.input-error {
+  border-color: #f87171 !important;
+  outline-color: #f87171 !important;
+}

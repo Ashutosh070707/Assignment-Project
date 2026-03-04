@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.ShelfPosition;
+import com.example.demo.exception.customExceptions.DatabaseOperationException;
+import com.example.demo.exception.customExceptions.ResourceNotFound;
 import com.example.demo.repository.DeviceRepository;
 import com.example.demo.repository.ShelfPositionRepository;
 import org.springframework.stereotype.Service;
@@ -16,28 +18,16 @@ public class ShelfPositionService {
     }
 
     public ShelfPosition createShelfPositionAndAttach(ShelfPosition shelfPosition) {
-        try {
-            return shelfPositionRepository.createShelfPositionAndAttach(shelfPosition).orElseThrow(() -> new RuntimeException("Service Error: Failed to create shelf and attach in the database"));
-
-        } catch (Exception e) {
-            System.err.println("Service Error: createShelfPositionAndAttach function failed. Reason: " + e.getMessage());
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        return shelfPositionRepository.createShelfPositionAndAttach(shelfPosition).orElseThrow(() -> new DatabaseOperationException("create", "shelfPosition"));
     }
 
     public void deleteShelfPosition(String deviceName, String shelfPositionId) {
-        try {
-            if (!deviceRepository.isDevicePresent(deviceName)) {
-                throw new RuntimeException("Device with name: " + deviceName + " does not exist in the database");
-            }
-            if (!shelfPositionRepository.isShelfPositionPresent(shelfPositionId)) {
-                throw new RuntimeException("ShelfPosition with id " + shelfPositionId + " does not exist in the database");
-            }
-            shelfPositionRepository.deleteShelfPosition(deviceName, shelfPositionId);
-        } catch (Exception e) {
-            System.err.println("Service Error: deleteShelfPosition function failed. Reason: " + e.getMessage());
-            throw new RuntimeException(e.getMessage(), e);
+        if (!deviceRepository.isDevicePresent(deviceName)) {
+            throw new ResourceNotFound("Device", "name", deviceName);
         }
+        if (!shelfPositionRepository.isShelfPositionPresent(shelfPositionId)) {
+            throw new ResourceNotFound("ShelfPosition", "id", shelfPositionId);
+        }
+        shelfPositionRepository.deleteShelfPosition(deviceName, shelfPositionId);
     }
-
 }

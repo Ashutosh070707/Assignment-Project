@@ -18,23 +18,13 @@ public class ShelfPositionController {
 
     @PostMapping("/")
     public ResponseEntity<?> createShelfPositionAndAttach(@Valid @RequestBody ShelfPosition shelfPosition) {
-        try {
-            ShelfPosition savedShelfPosition = shelfPositionService.createShelfPositionAndAttach(shelfPosition);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedShelfPosition);
-        } catch (Exception e) {
-            System.err.println("Controller Error: Error in createShelfPositionAndAttach in ShelfPositionController. Reason: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        ShelfPosition savedShelfPosition = shelfPositionService.createShelfPositionAndAttach(shelfPosition);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedShelfPosition);
     }
 
     @DeleteMapping("/{deviceName}/{shelfPositionId}")
     public ResponseEntity<?> deleteShelfPosition(@PathVariable String deviceName, @PathVariable String shelfPositionId) {
-        try {
-            shelfPositionService.deleteShelfPosition(deviceName, shelfPositionId);
-            return ResponseEntity.status(HttpStatus.OK).body("ShelfPosition deleted successfully");
-        } catch (Exception e) {
-            System.err.println("Controller Error: Error in deleteShelfPosition in ShelfPositionController. Reason: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        shelfPositionService.deleteShelfPosition(deviceName, shelfPositionId);
+        return ResponseEntity.status(HttpStatus.OK).body("ShelfPosition deleted successfully");
     }
 }

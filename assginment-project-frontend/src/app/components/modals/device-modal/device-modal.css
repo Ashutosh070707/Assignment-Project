@@ -39,3 +39,34 @@
   align-items: center;
   justify-content: center;
 }
+
+
+
+
+/* ///////////////// */
+
+/* --- Disabled Button State --- */
+.btn-primary:disabled {
+  background-color: #94a3b8; /* A muted grayish-blue */
+  border-color: #94a3b8;
+  color: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Optional: Add the validation message text styles if you didn't copy them over yet */
+.validation-messages {
+  min-height: 20px;
+  margin-top: 4px;
+}
+
+.text-error {
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.input-error {
+  border-color: #f87171 !important;
+  outline-color: #f87171 !important;
+}
