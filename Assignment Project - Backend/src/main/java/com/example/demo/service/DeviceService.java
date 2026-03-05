@@ -4,6 +4,7 @@ import com.example.demo.DTO.DeviceSummary;
 import com.example.demo.DTO.UpdateDevice;
 import com.example.demo.entity.Device;
 import com.example.demo.exception.customExceptions.DatabaseOperationException;
+import com.example.demo.exception.customExceptions.InvalidArgumentException;
 import com.example.demo.exception.customExceptions.ResourceAlreadyExists;
 import com.example.demo.exception.customExceptions.ResourceNotFound;
 import com.example.demo.repository.DeviceRepository;
@@ -33,6 +34,9 @@ public class DeviceService {
     public Device createDevice(Device device) {
         if (deviceRepository.isDevicePresent(device.getDeviceName())) {
             throw new ResourceAlreadyExists("Device", "name", device.getDeviceName());
+        }
+        if (device.getNumberOfShelfPositions() < 1 || device.getNumberOfShelfPositions() > 14) {
+            throw new InvalidArgumentException("Device can have numberOfShelfPosition from 1 to 14 only");
         }
         return deviceRepository.createDevice(device).orElseThrow(() -> new DatabaseOperationException("create", "device"));
     }

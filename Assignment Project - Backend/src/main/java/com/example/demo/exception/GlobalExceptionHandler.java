@@ -1,6 +1,7 @@
 package com.example.demo.exception;
 
 import com.example.demo.exception.customExceptions.DatabaseOperationException;
+import com.example.demo.exception.customExceptions.InvalidArgumentException;
 import com.example.demo.exception.customExceptions.ResourceAlreadyExists;
 import com.example.demo.exception.customExceptions.ResourceNotFound;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DatabaseOperationException.class)
     public ResponseEntity<?> handleDatabaseOperationException(DatabaseOperationException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<?> handleInvalidArgumentException(InvalidArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
