@@ -3,39 +3,31 @@
 
 
 :root {
+  /* COMMON VARIABLE FOR BOTH THEAMES */
 
-  /* =========================================
-     COMMON VARIABLES (Same for both themes)
-     ========================================= */
-  /* Header Action Buttons */
+  /* Header */
   --header-btn-bg: rgb(232, 228, 228);
   --header-btn-txt-color: black;
   --header-btn-border-color: rgb(89, 84, 84);
   --header-btn-hover-bg: rgb(255, 255, 255);
+  --text-title: white;       /* Project title text */
 
   /* Sidebar */
   --sidebar-allDevice-selected: rgba(211, 191, 191, 0.15);
 
+  /* =================================================================== */
 
-  /* =========================================
-     DARK MODE (DEFAULT)
-     ========================================= */
+  /* DARK MODE */
+
   --bg-global: #121212;      /* All background should be dark */
   --bg-brand: purple;        /* Header & Accordion backgrounds */
   --text-main: white;        /* Sidebar text & general text */
-  --text-title: white;       /* Project title text */
 
-  /* Header Action Buttons */
-  --header-btn-bg: rgb(232, 228, 228);
-  --header-btn-txt-color: black;
-  --header-btn-border-color: rgb(89, 84, 84);
-  --header-btn-hover-bg: rgb(255, 255, 255);
+  /* Header */
   --header-border-bottom: white;
 
-
-  /* Sidebar CSS variables */
+  /* Sidebar */
   --sidebar-border-right-color: white;
-  --sidebar-allDevice-selected: rgba(211, 191, 191, 0.15);
   --spinner-border-color: rgb(190, 189, 189);
 
   /* DeviceSummary */
@@ -43,28 +35,23 @@
   --dropdown-default-color: white;
   --dropDown-hover-bg-color: rgb(233, 227, 227);
   --drowpDown-hover-text-color: black;
-  
 }
 
+/* =================================================================== */
+
+/* LIGHT MODE */
+
 .light-theme {
-  /* =========================================
-     LIGHT MODE OVERRIDES
-     ========================================= */
+
   --bg-global: white;        /* All background should be white */
   --bg-brand: blue;          /* Header & Accordion backgrounds */
   --text-main: black;        /* Sidebar text & general text */
-  --text-title: white;       /* Project title text (Stays white) */
   
-  /* Header Action Buttons */
-  --header-btn-bg: rgb(232, 228, 228);
-  --header-btn-txt-color: black;
-  --header-btn-border-color: rgb(89, 84, 84);
-  --header-btn-hover-bg: rgb(255, 255, 255);
+  /* Header */
   --header-border-bottom: black;
 
-   /* Sidebar CSS variables */
+   /* Sidebar */
   --sidebar-border-right-color: black;
-  --sidebar-allDevice-selected: rgba(118, 109, 109, 0.15);
   --spinner-border-color: rgb(92, 149, 235);
 
   /* DeviceSummary */
@@ -88,12 +75,11 @@ body, html {
 
 * {
   box-sizing: inherit;
-}
+} 
 
 input, button, textarea, select {
   font-family: inherit;
 }
-
 
 /* --- Overlay & Container --- */
 .modal-overlay {

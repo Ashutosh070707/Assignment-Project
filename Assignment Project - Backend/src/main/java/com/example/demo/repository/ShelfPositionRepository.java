@@ -35,11 +35,37 @@ public class ShelfPositionRepository {
         }
     }
 
+    public boolean canAddNewShelfPosition(String deviceId) {
+        final String cypher = """
+                MATCH (d:Device {id: $deviceId})
+                RETURN CASE
+                       WHEN coalesce(d.numberOfShelfPositions, 0) >= 14 THEN false
+                       ELSE true
+                    END AS canAddShelfPosition;
+                """;
+
+        try {
+            var result = driver.executableQuery(cypher).withParameters(Map.of(
+                    "deviceId", deviceId
+            )).execute();
+
+            if (result.records().isEmpty()) return false;
+
+            var record = result.records().getFirst();
+
+            return record.get("canAddShelfPosition").asBoolean();
+        } catch (Exception e) {
+            System.err.println("Repository Error: Failed to execute canAddNewShelfPosition method. Reason: " + e.getMessage());
+            throw new DatabaseOperationException("Database error occurred while checking whether we can add new shelfPosition or not.");
+        }
+    }
+
     public Optional<ShelfPosition> createShelfPositionAndAttach(ShelfPosition shelfPosition) {
         final String cypher = """
                 MATCH (d:Device {
                 id: $deviceId
                 })
+                SET d.numberOfShelfPositions = coalesce(d.numberOfShelfPositions, 0) + 1
                 WITH d
                 MERGE (sp:ShelfPosition {
                     id: $id,
@@ -74,8 +100,9 @@ public class ShelfPositionRepository {
 
     public void deleteShelfPosition(String deviceName, String shelfPositionId) {
         final String cypher = """
-                MATCH (d:Device {deviceName: $deviceName})-[p:HAS]->(sp:ShelfPosition {id: $shelfPositionId})
+                 MATCH (d:Device {deviceName: $deviceName})-[p:HAS]->(sp:ShelfPosition {id: $shelfPositionId})
                  OPTIONAL MATCH (sp)-[r:ATTACHED]->(s:Shelf)
+                 SET d.numberOfShelfPositions = coalesce(d.numberOfShelfPositions, 0) - 1
                  DELETE p, r
                  REMOVE s:Shelf, sp:ShelfPosition
                  SET s:DeletedShelf, sp:DeletedShelfPosition

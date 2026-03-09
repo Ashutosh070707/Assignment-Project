@@ -25,7 +25,6 @@
   background-color: var(--sidebar-allDevice-selected);
 }
 
-/* Arrow rotation animation */
 .arrow {
   transition: transform 0.3s ease;
 }
@@ -37,18 +36,19 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  overflow-y: auto; /* Adds a scrollbar exactly as noted in your Excalidraw */
-  flex: 1; /* Allows the list to take up the remaining sidebar height */
+  overflow-y: auto; 
+  flex: 1;
 }
 
 .device-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px 12px 40px; /* Indented slightly so it looks like a dropdown item */
+  padding: 12px 20px 12px 40px; 
   cursor: pointer;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.2); /* Faint separator line */
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
   transition: all 0.2s ease;
+  overflow: auto;
 }
 
 .device-item:hover {
@@ -56,27 +56,24 @@
 }
 
 .no-device {
-  text-align: center;      /* Centers the text horizontally */
-  padding: 1rem;           /* Gives it some breathing room */
-  color: #6b7280;          /* Optional: Gives it a muted, grayish placeholder look */
-  font-style: italic;      /* Optional: Emphasizes that it's an empty state */
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280;
+  font-style: italic;
 }
 
-/* Styling for the currently clicked device */
 .device-item.selected {
   background-color: rgba(128, 128, 128, 0.3);
   font-weight: bold;
-  /* Adds a nice brand-colored stripe on the left to show it's active */
   border-left: 4px solid var(--bg-brand); 
-  padding-left: 36px; /* Offset the 4px border so text doesn't shift */
+  padding-left: 36px;
 }
 
-/* The Spinner Animation */
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid var(--spinner-border-color); /* Faint border */
-  border-top-color: #ffffff; /* Solid top border */
+  border: 2px solid var(--spinner-border-color);
+  border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

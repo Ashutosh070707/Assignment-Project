@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
 import { DeviceService } from '../../../services/device';
 import { ModalService } from '../../../services/modal';
 
@@ -6,13 +6,18 @@ import { ModalService } from '../../../services/modal';
   selector: 'app-delete-modal',
   imports: [],
   templateUrl: './delete-modal.html',
-  styleUrl: './delete-modal.css', // Assuming you have the .btn-spinner and .error-banner CSS here
+  styleUrl: './delete-modal.css'
 })
-export class DeleteModal {
-  @Input() itemType: 'Device' | 'Shelf' | 'Shelf Position' = 'Device';
-  @Output() close = new EventEmitter<void>();
 
-  // Manage UI states locally in the modal
+export class DeleteModal {
+  itemType = computed(() => {
+    const active = this.modalService.activeModal();
+    if (active === 'delete-device') return 'Device';
+    if (active === 'delete-shelf') return 'Shelf';
+    if (active === 'delete-shelf-position') return 'Shelf Position';
+    return 'Item'; // Fallback
+  });
+ 
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
 
@@ -24,18 +29,20 @@ export class DeleteModal {
   closeModal() {
     this.errorMessage.set(null);
     this.isSubmitting.set(false);
-    this.close.emit();
+    this.modalService.closeModal();
   }
 
   onConfirmDelete() {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
-    if (this.itemType === 'Device') {
+    const type = this.itemType();
+
+    if (type === 'Device') {
       const currentDeviceName = this.deviceService.selectedDeviceSummary()?.device?.deviceName;
 
       if (!currentDeviceName) {
-        this.errorMessage.set('Error: Cannot find the name of the device to delete.');
+        this.errorMessage.set('Cannot find the name of the device to delete.');
         this.isSubmitting.set(false);
         return;
       }
@@ -44,7 +51,7 @@ export class DeleteModal {
         next: () => this.closeModal(),
         error: (err) => this.handleError(err, 'Failed to delete Device.'),
       });
-    } else if (this.itemType === 'Shelf') {
+    } else if (type === 'Shelf') {
       const shelfName = this.modalService.selectedItemId();
       if (!shelfName) return this.handleError({ error: 'Cannot find Shelf with this shelfName.' }, '');
 
@@ -52,14 +59,11 @@ export class DeleteModal {
         next: () => this.closeModal(),
         error: (err) => this.handleError(err, 'Failed to delete Shelf.'),
       });
-    } // 3. Handling SHELF POSITION Deletion
-    else if (this.itemType === 'Shelf Position') {
-      
-      // CHANGE 1: Grab the real ID from the ModalService instead of the placeholder string
+    } else if (type === 'Shelf Position') {
       const positionId = this.modalService.selectedItemId(); 
       
       if (!positionId) {
-        this.errorMessage.set('Error: Cannot find the ID of the shelf position to delete.');
+        this.errorMessage.set('Cannot find the ID of the shelf position to delete.');
         this.isSubmitting.set(false);
         return;
       }
@@ -71,7 +75,6 @@ export class DeleteModal {
     }
   }
 
-  // Reusable error parser
   private handleError(err: any, defaultMessage: string) {
     this.isSubmitting.set(false);
     let backendError = defaultMessage;

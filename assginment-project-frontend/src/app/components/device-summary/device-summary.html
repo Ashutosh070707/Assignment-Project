@@ -1,6 +1,6 @@
 <div class="device-summary-container">
   @if (deviceService.selectedDeviceSummary(); as summary) {
-    <div
+    <div 
       class="dropdown-deviceinfo"
       [class.deviceInfoSelected]="isDeviceInfoOpen()"
       (click)="toggleDeviceInfo()"
@@ -14,7 +14,7 @@
           <table class="device-info-table">
             <tbody>
               <tr>
-                <th>ID</th>
+                <th>Id</th>
                 <td>{{ summary.device.id }}</td>
               </tr>
               <tr>
@@ -57,7 +57,7 @@
         <button
           class="text-btn-add add-position-btn"
           (click)="onAddShelfPosition()"
-          [disabled]="isAddingPosition()"
+          [disabled]="isAddingPosition() || summary.device.numberOfShelfPositions>=14"
         >
           @if (isAddingPosition()) {
             <span class="btn-spinner"></span> Adding...
@@ -73,7 +73,7 @@
               <tr>
                 <th>S.No</th>
                 <th>ShelfPosition Id</th>
-                <th>Shelf</th>
+                <th>Shelf Name</th>
                 <th>Action on Shelf</th>
                 <th>Action on ShelfPosition</th>
               </tr>
@@ -207,7 +207,7 @@
   } @else {
     <div class="empty-state-container">
       <h2>No Device Selected</h2>
-      <p>Please select a device from the sidebar to view its details.</p>
+      <p>Please select a device from the sidebar to view its details</p>
     </div>
   }
 </div>

@@ -8,6 +8,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient() // 2. Add it to the providers array
+
+    // Added this to enable/do HTTP requests to backend
+    provideHttpClient()
   ]
 };

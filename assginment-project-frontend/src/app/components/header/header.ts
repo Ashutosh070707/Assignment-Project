@@ -8,9 +8,10 @@ import { ModalService } from '../../services/modal';
   styleUrl: './header.css',
 })
 export class Header {
-  constructor(public modalService: ModalService) {}
-
   isDarkMode = signal(true);
+
+  constructor(public modalService: ModalService) {}
+  
   toggleTheme(){
     if (this.isDarkMode()) {
       document.body.classList.add('light-theme');

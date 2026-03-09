@@ -10,18 +10,17 @@ import { DeviceService } from '../../services/device';
   styleUrl: './device-summary.css',
 })
 export class DeviceSummary {
-  constructor(
-    public modalService: ModalService,
-    public deviceService: DeviceService,
-  ) {}
-
   isDeviceInfoOpen = signal(true);
   isShelfPositionsOpen = signal(false);
   isShelvesOpen = signal(false);
   isSettingOpen = signal(false);
 
-  // NEW: Track the loading state of the Add button
   isAddingPosition = signal(false);
+
+  constructor(
+    public modalService: ModalService,
+    public deviceService: DeviceService,
+  ) {}
 
   toggleDeviceInfo() {
     this.isDeviceInfoOpen.update((v) => !v);
@@ -59,7 +58,6 @@ export class DeviceSummary {
     }
   }
 
-  // NEW: Handle adding a shelf position directly from the UI
   onAddShelfPosition() {
     const currentDevice = this.deviceService.selectedDeviceSummary()?.device;
 
@@ -70,21 +68,19 @@ export class DeviceSummary {
 
     this.isAddingPosition.set(true);
 
-    // Build the payload (Generating a random UUID for the new position)
+    // Building the payload to send to the backend
     const newPositionData = {
-      id: crypto.randomUUID(),
-      deviceId: currentDevice.id,
+      deviceId: currentDevice.id
     };
 
     this.deviceService.addShelfPosition(newPositionData).subscribe({
       next: () => {
-        // Success! The tap() in the service automatically updates the UI.
         this.isAddingPosition.set(false);
       },
       error: (err) => {
         this.isAddingPosition.set(false);
         const backendError = typeof err.error === 'string' ? err.error : 'Failed to add position.';
-        alert('Error: ' + backendError); // Replace with a Toast/Snackbar if you have one
+        console.log(backendError, err)
       },
     });
   }

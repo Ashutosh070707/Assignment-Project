@@ -1,33 +1,28 @@
 /* This targets the <app-root> wrapper that Angular generates */
 :host {
   display: flex;
-  flex-direction: column;
-  height: 100vh; /* Locks the entire app to exactly the height of the screen */
+  flex-direction: column; 
+  height: 100vh;
 }
 
 .main-content {
   display: flex;
-  /* 100vh is the full screen height. 
-     We subtract ~60px (your header's approximate height). 
-     Adjust '60px' if your header is slightly taller or shorter! */
   flex: 1;
   width: 100%;
-  overflow: hidden; /* Prevents the whole browser window from scrolling */
+  overflow: auto;
 }
 
 .sidebar-content {
-  width: 20%; /* Fixed width for your sidebar */
-  height: 100%; /* Takes the full height of the .main-content */
+  width: 20%;
+  height: 100%;
   border-right: 1px solid var(--sidebar-border-right-color);
-  overflow-y: auto; /* The magic property: adds a vertical scrollbar ONLY if needed */
-  border-right: 1px solid var(--text-main); /* A separator line matching your theme */
   background-color: var(--bg-global);
 }
 
 .device-summary-content {
-  flex: 1; /* Tells this div to expand and fill all the remaining horizontal space */
+  flex: 1;
   height: 100%;
-  overflow-y: auto; /* Allows the right side to scroll independently of the sidebar */
+  overflow-y: auto;
   background-color: var(--bg-global);
 }
 

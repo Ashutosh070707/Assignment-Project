@@ -16,8 +16,7 @@ export class DeviceModal implements OnInit {
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
 
-  // Store original name so it doesn't trigger "name taken" against itself
-  originalDeviceName = '';
+  originalDeviceName = ''; 
 
   constructor(
     public modalService: ModalService,
@@ -25,7 +24,6 @@ export class DeviceModal implements OnInit {
     private fb: FormBuilder
   ) {
     this.deviceForm = this.fb.group({
-      // Added async validator to deviceName
       deviceName: ['', [Validators.required], [this.deviceNameValidator()]],
       deviceType: ['', Validators.required],
       partNumber: ['', Validators.required],
@@ -39,7 +37,7 @@ export class DeviceModal implements OnInit {
       const currentDevice = this.deviceService.selectedDeviceSummary()?.device;
       
       if (currentDevice) {
-        this.originalDeviceName = currentDevice.deviceName; // Save for async validation
+        this.originalDeviceName = currentDevice.deviceName;
 
         this.deviceForm.patchValue({
           deviceName: currentDevice.deviceName,
@@ -49,7 +47,6 @@ export class DeviceModal implements OnInit {
           numberOfShelfPositions: currentDevice.numberOfShelfPositions
         });
 
-        // CRITICAL: Remove validation from the hidden field so the form can actually be valid!
         const shelfControl = this.deviceForm.get('numberOfShelfPositions');
         if (shelfControl) {
           shelfControl.clearValidators();
@@ -59,21 +56,14 @@ export class DeviceModal implements OnInit {
     }
   }
 
-  // =========================================
-  // THE ASYNC VALIDATOR
-  // =========================================
   deviceNameValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       if (!control.value) return of(null);
-
-      // If updating and name hasn't changed, skip validation
       if (this.modalService.activeModal() === 'update-device' && control.value === this.originalDeviceName) {
         return of(null);
       }
-
       // Ping backend after 500ms debounce
       return timer(500).pipe(
-        // Assuming your deviceService has a checkDeviceNameValidity method!
         switchMap(() => this.deviceService.checkDeviceNameValidity(control.value)),
         map(() => null),
         catchError(() => of({ nameTaken: true }))
@@ -92,8 +82,6 @@ export class DeviceModal implements OnInit {
     if (event) {
       event.preventDefault(); 
     }
-
-    // Notice the added check for pending state
     if (this.deviceForm.invalid || this.deviceForm.pending) {
       this.deviceForm.markAllAsTouched(); 
       return;
@@ -124,7 +112,6 @@ export class DeviceModal implements OnInit {
       const currentDeviceId = this.deviceService.selectedDeviceSummary()?.device.id;
       
       if (currentDeviceId) {
-        // Build the DTO payload matching your backend exactly
         const payload = {
           id: currentDeviceId,
           oldDeviceName: this.originalDeviceName,

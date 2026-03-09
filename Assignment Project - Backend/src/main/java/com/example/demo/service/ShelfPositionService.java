@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.ShelfPosition;
 import com.example.demo.exception.customExceptions.DatabaseOperationException;
+import com.example.demo.exception.customExceptions.InvalidArgumentException;
 import com.example.demo.exception.customExceptions.ResourceNotFound;
 import com.example.demo.repository.DeviceRepository;
 import com.example.demo.repository.ShelfPositionRepository;
@@ -18,6 +19,9 @@ public class ShelfPositionService {
     }
 
     public ShelfPosition createShelfPositionAndAttach(ShelfPosition shelfPosition) {
+        if (!shelfPositionRepository.canAddNewShelfPosition(shelfPosition.getDeviceId())) {
+            throw new InvalidArgumentException("Device cannot have more than 14 shelfPositions");
+        }
         return shelfPositionRepository.createShelfPositionAndAttach(shelfPosition).orElseThrow(() -> new DatabaseOperationException("create", "shelfPosition"));
     }
 

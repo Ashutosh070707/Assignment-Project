@@ -1,18 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { DeviceService } from '../../services/device';
 
-// We define the shape of our device data
-export interface Device {
-  id: string;
-  name: string;
-}
-
 @Component({
   selector: 'app-sidebar',
   imports: [],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
+
 export class Sidebar {
   isDropdownOpen = signal(false);
 
@@ -28,17 +23,17 @@ export class Sidebar {
   }
 
   selectDevice(deviceName: string) {
-    // GUARD 1: Prevent clicking if this device is already selected
+    // Prevent clicking if this device is already selected
     if (this.deviceService.selectedDeviceName() === deviceName) {
       return; 
     }
 
-    // GUARD 2: Prevent clicking ANY device if a fetch is currently in progress
+    // Prevent clicking any device if a fetch is currently in progress
     if (this.deviceService.loadingDeviceName() !== null) {
       return; 
     }
 
-    // Tell the service to fetch the data!
+    // Fetching device summary of the selected device
     this.deviceService.fetchDeviceSummary(deviceName);
   }
 }
