@@ -18,7 +18,6 @@ export class ShelfModal implements OnInit {
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
   
-  // NEW: Store the original name so we don't flag it as duplicate when updating
   originalShelfName = '';
 
   constructor(
@@ -27,7 +26,6 @@ export class ShelfModal implements OnInit {
     public modalService: ModalService 
   ) {
     this.shelfForm = this.fb.group({
-      // Notice the 3rd argument array is for Async Validators!
       shelfName: ['', [Validators.required], [this.shelfNameValidator()]],
       partNumber: ['', Validators.required]
     });
@@ -53,25 +51,17 @@ export class ShelfModal implements OnInit {
     }
   }
 
-  // =========================================
-  // THE ASYNC VALIDATOR
-  // =========================================
   shelfNameValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      // 1. If it's empty, don't bother checking
       if (!control.value) return of(null);
 
-      // 2. If we are updating and the name hasn't changed, it's valid!
       if (this.modalService.activeModal() === 'update-shelf' && control.value === this.originalShelfName) {
         return of(null);
       }
 
-      // 3. Wait 500ms after the user stops typing (Debounce)
       return timer(500).pipe(
         switchMap(() => this.deviceService.checkShelfNameValidity(control.value)),
-        // If the backend returns 200 OK, the name is valid (return null)
         map(() => null),
-        // If the backend throws an error (e.g. 400 or 409), the name is taken
         catchError(() => of({ nameTaken: true }))
       );
     };

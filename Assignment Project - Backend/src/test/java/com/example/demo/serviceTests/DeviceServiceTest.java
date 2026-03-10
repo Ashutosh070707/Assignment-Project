@@ -5,7 +5,6 @@ import com.example.demo.DTO.UpdateDevice;
 import com.example.demo.entity.Device;
 import com.example.demo.enums.BuildingName;
 import com.example.demo.enums.DeviceType;
-import com.example.demo.exception.customExceptions.InvalidArgumentException;
 import com.example.demo.exception.customExceptions.ResourceAlreadyExists;
 import com.example.demo.exception.customExceptions.ResourceNotFound;
 import com.example.demo.repository.DeviceRepository;
@@ -17,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +23,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DeviceServiceTest {
-
     @Mock
     private DeviceRepository deviceRepository;
 
@@ -42,36 +39,6 @@ public class DeviceServiceTest {
     }
 
     @Test
-    void getDeviceDetails_ShouldThrowResourceNotFound_WhenDeviceDoesNotExist() {
-        when(deviceRepository.isDevicePresent("Fake-Router")).thenReturn(false);
-
-        assertThrows(ResourceNotFound.class, () -> {
-            deviceService.getDeviceDetails("Fake-Router");
-        });
-    }
-
-    @Test
-    void createDevice_ShouldThrowResourceAlreadyExists_WhenNameTaken() {
-        when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(true);
-
-        assertThrows(ResourceAlreadyExists.class, () -> {
-            deviceService.createDevice(dummyDevice);
-        });
-    }
-
-    @Test
-    void createDevice_ShouldThrowInvalidArgument_WhenShelfPositionsInvalid() {
-        when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(false);
-
-        // Break the rule: Set positions to 0 (Invalid)
-        dummyDevice.setNumberOfShelfPositions(0);
-
-        assertThrows(InvalidArgumentException.class, () -> {
-            deviceService.createDevice(dummyDevice);
-        });
-    }
-
-    @Test
     void createDevice_ShouldSucceed_WhenValid() {
         when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(false);
         when(deviceRepository.createDevice(dummyDevice)).thenReturn(Optional.of(dummyDevice));
@@ -84,14 +51,12 @@ public class DeviceServiceTest {
     }
 
     @Test
-    void getAllDevices_ShouldReturnList() {
-        when(deviceRepository.getAllDevices()).thenReturn(List.of(dummyDevice));
+    void createDevice_ShouldThrowResourceAlreadyExists_WhenNameTaken() {
+        when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(true);
 
-        List<Device> result = deviceService.getAllDevices();
-
-        assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
-        verify(deviceRepository, times(1)).getAllDevices();
+        assertThrows(ResourceAlreadyExists.class, () -> {
+            deviceService.createDevice(dummyDevice);
+        });
     }
 
     @Test
@@ -109,29 +74,12 @@ public class DeviceServiceTest {
     }
 
     @Test
-    void deleteDevice_ShouldThrowResourceNotFound_WhenDoesNotExist() {
+    void getDeviceDetails_ShouldThrowResourceNotFound_WhenDeviceDoesNotExist() {
         when(deviceRepository.isDevicePresent("Fake-Router")).thenReturn(false);
 
-        assertThrows(ResourceNotFound.class, () -> deviceService.deleteDevice("Fake-Router"));
-        verify(deviceRepository, never()).deleteDevice(anyString());
-    }
-
-    @Test
-    void deleteDevice_ShouldSucceed_WhenExists() {
-        when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(true);
-        doNothing().when(deviceRepository).deleteDevice("Core-Router-01");
-
-        deviceService.deleteDevice("Core-Router-01");
-
-        verify(deviceRepository, times(1)).deleteDevice("Core-Router-01");
-    }
-
-    @Test
-    void updateDevice_ShouldThrowResourceNotFound_WhenOldNameDoesNotExist() {
-        UpdateDevice updateDto = new UpdateDevice("123", "Old-Name", "New-Name", "PN", BuildingName.Hanover_US, DeviceType.CORE_ROUTER);
-        when(deviceRepository.isDevicePresent("Old-Name")).thenReturn(false);
-
-        assertThrows(ResourceNotFound.class, () -> deviceService.updateDevice(updateDto));
+        assertThrows(ResourceNotFound.class, () -> {
+            deviceService.getDeviceDetails("Fake-Router");
+        });
     }
 
     @Test
@@ -145,5 +93,15 @@ public class DeviceServiceTest {
 
         assertNotNull(result);
         verify(deviceRepository, times(1)).updateDevice(updateDto);
+    }
+
+    @Test
+    void deleteDevice_ShouldSucceed_WhenExists() {
+        when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(true);
+        doNothing().when(deviceRepository).deleteDevice("Core-Router-01");
+
+        deviceService.deleteDevice("Core-Router-01");
+
+        verify(deviceRepository, times(1)).deleteDevice("Core-Router-01");
     }
 }

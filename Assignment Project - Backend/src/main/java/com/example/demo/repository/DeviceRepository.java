@@ -103,26 +103,18 @@ public class DeviceRepository {
             deviceSummary.setDevice(device);
 
             List<ShelfPair> shelfPairs = new ArrayList<>();
-
-            // Iterate over the list of maps returned as 'shelfPairs'
             record.get("shelfPairs").asList(value -> value).forEach(pairValue -> {
-
                 org.neo4j.driver.Value spValue = pairValue.get("shelfPosition");
                 org.neo4j.driver.Value sValue = pairValue.get("shelf");
 
-                // 1. Check if the device has ANY shelf positions
                 if (!spValue.isNull()) {
-
-                    // Extract ShelfPosition
                     org.neo4j.driver.types.Node spNode = spValue.asNode();
                     ShelfPosition shelfPosition = new ShelfPosition();
                     shelfPosition.setId(spNode.get("id").asString());
                     shelfPosition.setDeviceId(spNode.get("deviceId").asString());
 
-                    // Extract Shelf (default to null)
                     Shelf shelf = null;
 
-                    // 2. If a Shelf is attached, instantiate and populate it
                     if (!sValue.isNull()) {
                         org.neo4j.driver.types.Node sNode = sValue.asNode();
                         shelf = new Shelf();
@@ -131,7 +123,6 @@ public class DeviceRepository {
                         shelf.setPartNumber(sNode.get("partNumber").asString());
                     }
 
-                    // 3. Add the bundled pair to our list
                     shelfPairs.add(new ShelfPair(shelfPosition, shelf));
                 }
             });

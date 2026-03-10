@@ -67,17 +67,13 @@ export class DeviceService {
         const currentSummary = this.selectedDeviceSummary();
 
         if (currentSummary && currentSummary.shelfPairs) {
-          // Map through the existing pairs
           const updatedPairs = currentSummary.shelfPairs.map((pair) => {
-            // Find the specific empty slot we just added a shelf to
             if (pair.shelfPosition && pair.shelfPosition.id === newShelfData.shelfPositionId) {
-              // Populate the 'shelf' side of this pair with the new data
               return { ...pair, shelf: savedShelf };
             }
-            return pair; // Leave all other slots alone
+            return pair; 
           });
 
-          // Instantly update the UI
           this.selectedDeviceSummary.set({
             ...currentSummary,
             shelfPairs: updatedPairs,
@@ -114,20 +110,14 @@ export class DeviceService {
   }
 
   updateDevice(deviceId: string, updatedData: any) {
-    // FIX 1: Removed /${deviceId} from the URL to perfectly match your Spring Boot @PutMapping("/update")
     const endpointUrl = `${this.apiUrl}/api/devices/update`;
 
     return this.http.put<any>(endpointUrl, updatedData).pipe(
       tap((updatedDevice) => {
-        // Update Sidebar list
         this.devices.update((currentDevices) =>
           currentDevices.map((d) => (d.id === deviceId ? { ...d, ...updatedDevice } : d)),
         );
-
-        // Update Device Summary screen
         const currentSummary = this.selectedDeviceSummary();
-
-        // FIX 2: Added a quick safety check to ensure we only update the summary if the IDs actually match
         if (currentSummary && currentSummary.device.id === deviceId) {
           this.selectedDeviceSummary.set({
             ...currentSummary,
@@ -139,7 +129,6 @@ export class DeviceService {
   }
 
   checkDeviceNameValidity(deviceName: string) {
-    // Modify URL to match the exact controller endpoint you wrote
     return this.http.get(`${this.apiUrl}/api/devices/check/${deviceName}`, {
       responseType: 'text',
     });
@@ -152,16 +141,12 @@ export class DeviceService {
   updateShelf(shelfId: string, formValues: any) {
     const currentSummary = this.selectedDeviceSummary();
     let oldShelfName = '';
-
-    // 1. Dig into our local state to find the original shelf name before it was changed
     if (currentSummary && currentSummary.shelfPairs) {
       const targetPair = currentSummary.shelfPairs.find((pair) => pair.shelf?.id === shelfId);
       if (targetPair && targetPair.shelf) {
         oldShelfName = targetPair.shelf.shelfName;
       }
     }
-
-    // 2. Build the payload to match your UpdateShelf DTO exactly!
     const payload = {
       id: shelfId,
       previousShelfName: oldShelfName,
@@ -169,14 +154,11 @@ export class DeviceService {
       newPartNumber: formValues.partNumber,
     };
 
-    // 3. Send the PUT request (Adjust the base URL if your controller has a class-level mapping)
     return this.http.put<any>(`${this.apiUrl}/api/shelves/update`, payload).pipe(
       tap((updatedShelfResponse) => {
-        // 4. Instantly update the UI with the response from the backend
         if (currentSummary && currentSummary.shelfPairs) {
           const updatedPairs = currentSummary.shelfPairs.map((pair) => {
             if (pair.shelf && pair.shelf.id === shelfId) {
-              // Swap out the old shelf object for the fresh one returned by Spring Boot
               return { ...pair, shelf: updatedShelfResponse };
             }
             return pair;

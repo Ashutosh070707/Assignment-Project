@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.DTO.CreateShelfAndAttach;
-import com.example.demo.DTO.DeleteShelf;
 import com.example.demo.DTO.UpdateShelf;
 import com.example.demo.entity.Shelf;
 import com.example.demo.service.ShelfService;

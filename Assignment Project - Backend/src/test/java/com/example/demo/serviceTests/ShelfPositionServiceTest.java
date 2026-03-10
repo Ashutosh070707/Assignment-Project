@@ -21,7 +21,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ShelfPositionServiceTest {
-
     @Mock
     private ShelfPositionRepository shelfPositionRepository;
 
@@ -60,7 +59,6 @@ public class ShelfPositionServiceTest {
 
     @Test
     void deleteShelfPosition_ShouldThrowResourceNotFound_WhenDeviceMissing() {
-        // Device is missing!
         when(deviceRepository.isDevicePresent("Fake-Router")).thenReturn(false);
 
         assertThrows(ResourceNotFound.class, () -> shelfPositionService.deleteShelfPosition("Fake-Router", "pos-123"));
@@ -69,7 +67,6 @@ public class ShelfPositionServiceTest {
 
     @Test
     void deleteShelfPosition_ShouldThrowResourceNotFound_WhenPositionMissing() {
-        // Device is found, but Position is missing!
         when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(true);
         when(shelfPositionRepository.isShelfPositionPresent("fake-pos")).thenReturn(false);
 
@@ -79,7 +76,6 @@ public class ShelfPositionServiceTest {
 
     @Test
     void deleteShelfPosition_ShouldSucceed_WhenBothExist() {
-        // Both are found!
         when(deviceRepository.isDevicePresent("Core-Router-01")).thenReturn(true);
         when(shelfPositionRepository.isShelfPositionPresent("pos-123")).thenReturn(true);
         doNothing().when(shelfPositionRepository).deleteShelfPosition("Core-Router-01", "pos-123");

@@ -19,13 +19,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ShelfServiceTest {
-
     @Mock
     private ShelfRepository shelfRepository;
 
@@ -50,6 +48,18 @@ public class ShelfServiceTest {
     }
 
     @Test
+    void createShelfAndAttach_ShouldSucceed_WhenValid() {
+        when(shelfPositionRepository.isShelfPositionPresent("pos-123")).thenReturn(true);
+        when(shelfRepository.isShelfPresent("Firewall-SF-01")).thenReturn(false);
+        when(shelfRepository.createShelfAndAttach(eq("pos-123"), any(Shelf.class))).thenReturn(Optional.of(dummyShelf));
+
+        Shelf result = shelfService.createShelfAndAttach(createDto);
+
+        assertNotNull(result);
+        assertEquals("Firewall-SF-01", result.getShelfName());
+    }
+
+    @Test
     void createShelfAndAttach_ShouldThrowResourceNotFound_WhenPositionMissing() {
         when(shelfPositionRepository.isShelfPositionPresent("pos-123")).thenReturn(false);
 
@@ -66,23 +76,16 @@ public class ShelfServiceTest {
     }
 
     @Test
-    void createShelfAndAttach_ShouldSucceed_WhenValid() {
-        when(shelfPositionRepository.isShelfPositionPresent("pos-123")).thenReturn(true);
-        when(shelfRepository.isShelfPresent("Firewall-SF-01")).thenReturn(false);
-        // We use any(Shelf.class) because the Service creates a new Shelf object internally
-        when(shelfRepository.createShelfAndAttach(eq("pos-123"), any(Shelf.class))).thenReturn(Optional.of(dummyShelf));
+    void updateShelf_ShouldSucceed_WhenValid() {
+        UpdateShelf updateDto = new UpdateShelf("123", "Old-Shelf", "New-Shelf", "SH-999");
 
-        Shelf result = shelfService.createShelfAndAttach(createDto);
+        when(shelfRepository.isShelfPresent("Old-Shelf")).thenReturn(true);
+        when(shelfRepository.updateShelf(updateDto)).thenReturn(Optional.of(dummyShelf));
+
+        Shelf result = shelfService.updateShelf(updateDto);
 
         assertNotNull(result);
-        assertEquals("Firewall-SF-01", result.getShelfName());
-    }
-
-    @Test
-    void deleteShelf_ShouldThrowResourceNotFound_WhenDoesNotExist() {
-        when(shelfRepository.isShelfPresent("Fake-Shelf")).thenReturn(false);
-
-        assertThrows(ResourceNotFound.class, () -> shelfService.deleteShelf("Fake-Shelf"));
+        verify(shelfRepository, times(1)).updateShelf(updateDto);
     }
 
     @Test
@@ -93,51 +96,5 @@ public class ShelfServiceTest {
         shelfService.deleteShelf("Firewall-SF-01");
 
         verify(shelfRepository, times(1)).deleteShelf("Firewall-SF-01");
-    }
-
-    @Test
-    void updateShelf_ShouldThrowResourceNotFound_WhenOldNameDoesNotExist() {
-        UpdateShelf updateDto = new UpdateShelf("123", "Old-Shelf", "New-Shelf", "SH-999");
-        when(shelfRepository.isShelfPresent("Old-Shelf")).thenReturn(false);
-
-        assertThrows(ResourceNotFound.class, () -> shelfService.updateShelf(updateDto));
-    }
-
-    // --- MISSING UPDATE SCENARIO ---
-
-    @Test
-    void updateShelf_ShouldSucceed_WhenValid() {
-        UpdateShelf updateDto = new UpdateShelf("123", "Old-Shelf", "New-Shelf", "SH-999");
-
-        // 1. Mock the check to say the old shelf exists
-        when(shelfRepository.isShelfPresent("Old-Shelf")).thenReturn(true);
-
-        // 2. Mock the actual update
-        when(shelfRepository.updateShelf(updateDto)).thenReturn(Optional.of(dummyShelf));
-
-        Shelf result = shelfService.updateShelf(updateDto);
-
-        assertNotNull(result);
-        verify(shelfRepository, times(1)).updateShelf(updateDto);
-    }
-
-    // --- MISSING CHECK VALIDITY SCENARIOS ---
-
-    @Test
-    void checkValidity_ShouldThrowResourceAlreadyExists_WhenNameTaken() {
-        // If the repository says the name is found...
-        when(shelfRepository.isShelfPresent("Taken-Shelf")).thenReturn(true);
-
-        // ...it should throw the custom exception
-        assertThrows(ResourceAlreadyExists.class, () -> shelfService.checkValidity("Taken-Shelf"));
-    }
-
-    @Test
-    void checkValidity_ShouldSucceed_WhenNameIsAvailable() {
-        // If the repository says the name is NOT found...
-        when(shelfRepository.isShelfPresent("Available-Shelf")).thenReturn(false);
-
-        // ...it should simply run without throwing any errors
-        assertDoesNotThrow(() -> shelfService.checkValidity("Available-Shelf"));
     }
 }

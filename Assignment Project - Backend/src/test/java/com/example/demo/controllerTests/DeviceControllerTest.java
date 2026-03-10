@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(DeviceController.class)
 public class DeviceControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -113,7 +112,6 @@ public class DeviceControllerTest {
     void updateDevice_ShouldReturn200_WhenValid() throws Exception {
         UpdateDevice updateDto = new UpdateDevice("123", "Core-Router-01", "Core-Router-02", "CR-888", BuildingName.Hanover_US, DeviceType.CORE_ROUTER);
 
-        // Let's pretend the service updates the dummy device's name to match the DTO
         Device updatedDevice = new Device();
         updatedDevice.setDeviceName("Core-Router-02");
 

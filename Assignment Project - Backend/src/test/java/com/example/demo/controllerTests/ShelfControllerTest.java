@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest(ShelfController.class)
 public class ShelfControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
